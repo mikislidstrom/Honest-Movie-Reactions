@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body onload="init()">
+
+	<div id="main">
+		<div id="poster">
+			<img id="imagePoster">
+		</div>
+		<div id="movie_info">
+			<p>The movie</p>
+		</div>
+		<div id="twitter_stream">
+			<p>Tweet...</p>
+		</div>
+		<div id="diagram"></div>
+		<div id="search"></div>
+	</div>
+	<script type="text/javascript">
+
+	function init() {
+		var movies = [
+		{"name":"her", "backdrop":"http://image.tmdb.org/t/p/original/4f4tWe6uhwtuKMygfIAytR2W0pj.jpg", "poster": "http://image.tmdb.org/t/p/original/fsoTLnUXEUTNuVCBxAJMY0HPPd.jpg"},
+		{"name":"guardians of the galaxy","backdrop": "http://image.tmdb.org/t/p/original/bHarw8xrmQeqf3t8HpuMY7zoK4x.jpg", "poster":"http://image.tmdb.org/t/p/original/9gm3lL8JMTTmc3W4BmNMCuRLdL8.jpg"},
+		{"name": "fury", "backdrop": "http://image.tmdb.org/t/p/original/pKawqrtCBMmxarft7o1LbEynys7.jpg", "poster": "http://image.tmdb.org/t/p/original/fIHF63oznk2PXlYM6pPfhnOB3SD.jpg"},
+		{"name": "x-men: dasy of future past", "backdrop": "http://image.tmdb.org/t/p/original/efQ6bV4KMGYo1AOWiPIKjQDdsBB.jpg", "poster": "http://image.tmdb.org/t/p/original/giUK8ppRbfistadVzHtpainkhq4.jpg"}
+		];
+
+		var i = Math.floor(Math.random() * 4);
+		document.body.style.backgroundImage = "url(" + movies[i].backdrop + ")";
+		document.getElementById("imagePoster").src=movies[i].poster;
+
+	}
+
+
+	</script>
+</body>
+</html>

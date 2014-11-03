@@ -1,0 +1,38 @@
+body {
+	background-size: 100%;
+}
+
+#poster {
+	width: 30%;
+	float: left;
+}
+
+#imagePoster {
+	margin: 10%;
+	height: auto;
+	width:80%;
+	box-shadow: 10px 10px 10px #000000;
+}
+
+#movie_info {
+	margin: 10% 2% 2% 5%;
+	width: 40%;
+	height: 100%;
+	float: left;
+	opacity: 0.6;
+	background-color: #ffffff;
+	border-radius: 25px;
+}
+p {
+	margin: 5%;
+}
+
+#twitter_stream {
+	margin: 5%;
+	width: 30%;
+	height: 100%;
+	float: right;
+	opacity: 0.6;
+	background-color: #ffffff;
+	border-radius: 25px;
+}
