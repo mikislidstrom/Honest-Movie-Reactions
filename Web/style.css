@@ -15,24 +15,26 @@ body {
 }
 
 #movie_info {
-	margin: 10% 2% 2% 5%;
+	margin-top: 10%;
 	width: 40%;
 	height: 100%;
 	float: left;
-	opacity: 0.6;
-	background-color: #ffffff;
-	border-radius: 25px;
+	
 }
 p {
-	margin: 5%;
+	margin: 3%;
 }
 
+.textSection {
+	opacity: 0.8;
+	background-color: #ffffff;
+	border-radius: 20px;
+}
 #twitter_stream {
-	margin: 5%;
-	width: 30%;
+	margin-top: 3%;
+	margin-right: 3%;
+	width: 25%;
 	height: 100%;
 	float: right;
-	opacity: 0.6;
-	background-color: #ffffff;
-	border-radius: 25px;
+
 }
