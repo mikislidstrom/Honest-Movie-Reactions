@@ -3,113 +3,155 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
-	<script src="c3-0.3.0/d3.min.js" charset="utf-8"></script>
+	<!--<script src="c3-0.3.0/d3.min.js" charset="utf-8"></script>-->
 	<script src="c3-0.3.0/c3.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
-<body onload="init()">
+
+<body onload='init()'>
 
 	<div id="main">
 		<div id="poster">
 			<img id="imagePoster">
 		</div>
-		<div class="textSection" id="movie_info">
-			<p id="title">Title: </p>
-			<p id="overview">Description: </p>
-			<p id="genres">Genres: </p>
-			<p id="vote_average">Vote average: </p>
-		</div>
-		<div class="textSection" id="twitter_stream">
-			<p>Tweet...</p>
-		</div>
-		<div class="diagram" id="diagram">
-			<div id="chart1"></div>
-			<div id="chart2"></div>
-		</div>
-		<div id="search"></div>
-	</div>
-	<script type="text/javascript">
+		<div id="center">
+            <div id="search">
+                <form align="center" action="" method="post">
+                    <input type="text" name="search_term">
+                    <input type="submit" value="Search" onClick="search(this.form)">
+                </form>
+            </div>
+            <div class="textSection" id="movie_info">
+                <h3 id="title">Title: </h3>
+                <p id="tagline"></p>
+                <p id="overview">Description: </p>
+                <p id="genres">Genres: </p>
+                <p id="vote_average">Vote average: </p>
+                <p id="runtime"></p>
+                <p id="homepage">Homepage: </p>
+                <p id="imdb"></p>
+            </div>
+        </div>
+        <div class="textSection" id="twitter_stream">
+         <div class="tweet">
+            <p class="tweet_title">@jadajada...</p>
+            <p class="tweet_txt">Tweet...</p>
+        </div>
 
-	function init() {
-		$.ajax({
-            url: "json.php",
-            async: false,
-            dataType: 'json',
-            success: function(data) {
-                movieJSON = data;
-            }
-        });
-         
-         $("#title").text(movieJSON.title);
-         $("#overview").text(movieJSON.overview);
-         $("#vote_average").text(movieJSON.vote_average);
-         $("#imagePoster").attr("src", "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path);
-         $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
+    </div>
+    <div class="diagram" id="diagram">
+        <div id="chart1"></div>
+        <div id="chart2"></div>
+    </div>
 
-	};
+</div>
+
+<script type="text/javascript">
+var movieJSON;
+var id = "157336";
+var keys;
+
+
+function search(form) {
+    var id = form.search_term.value;
+    init(id);
+
+    $.ajax({
+        url: "moviekeys.php",
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            keys = data;
+        }
+    });
+}
+
+function init() {
+    
+    $.ajax({
+        url: "json.php?id=" + id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            movieJSON = data;
+        }
+    });
+
+    $("#title").text(movieJSON.title);
+    $("#tagline").text(movieJSON.tagline);
+    $("#overview").text(movieJSON.overview);
+    $("#vote_average").text("Average vote: " + movieJSON.vote_average);
+    $("#runtime").text("Runtime: " + movieJSON.runtime + " min");
+    $("#homepage").html('<a href="' + movieJSON.homepage + '">' + movieJSON.homepage + '</a>');
+    $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
+    $("#imagePoster").attr("src", "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path);
+    $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
+
+};
 
 var chart1 = c3.generate({
-	bindto: '#chart1',
-	size: {
-        height: 240,
-        width: 240
-    },
-    data: {
-        columns: [
-        	['Budget', 1.5],
-            ['Opening Weekend', 0.345],
-            ['Gross Total', 3.7],
-        ],
-        type : 'donut',
-        onclick: function (d, i) { console.log("onclick", d, i); },
-        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-    },
-    donut: {
-        title: "Box Office"
-    },
-    tooltip: {
-        format: {
-            value: function (value, id) {
-                var format = d3.format('$');
-                return (value >= 1) ? format(value) + 'MM' : format(value) + 'M';
-            }
+   bindto: '#chart1',
+   size: {
+    height: 240,
+    width: 240
+},
+data: {
+    columns: [
+    ['Budget', 1.5],
+    ['Opening Weekend', 0.345],
+    ['Gross Total', 3.7],
+    ],
+    type : 'donut',
+    onclick: function (d, i) { console.log("onclick", d, i); },
+    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+},
+donut: {
+    title: "Box Office"
+},
+tooltip: {
+    format: {
+        value: function (value, id) {
+            var format = d3.format('$');
+            return (value >= 1) ? format(value) + 'MM' : format(value) + 'M';
         }
     }
+}
 });
 
 var chart2 = c3.generate({
-	bindto: '#chart2',
-	size: {
-        height: 240,
-        width: 240
+   bindto: '#chart2',
+   size: {
+    height: 240,
+    width: 240
+},
+data: {
+    columns: [
+    ['Positives', 152],
+    ['Negatives', 96],
+    ],
+    type : 'donut',
+    colors: {
+        Positives: '#00c060',
+        Negatives: '#db4437',
     },
-    data: {
-        columns: [
-        	['Positives', 152],
-            ['Negatives', 96],
-        ],
-        type : 'donut',
-            colors: {
-            Positives: '#00c060',
-            Negatives: '#db4437',
-        },
-        onclick: function (d, i) { console.log("onclick", d, i); },
-        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-    },
-    donut: {
-        title: "Tweets"
-    },
-    tooltip: {
-        format: {
-            value: function (value, id) {
-                return value+" tweets";
-            }
+    onclick: function (d, i) { console.log("onclick", d, i); },
+    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+},
+donut: {
+    title: "Tweets"
+},
+tooltip: {
+    format: {
+        value: function (value, id) {
+            return value+" tweets";
         }
     }
+}
 });
 
 
-	</script>
+</script>
 </body>
 </html>

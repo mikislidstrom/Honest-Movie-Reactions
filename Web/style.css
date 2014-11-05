@@ -1,5 +1,6 @@
 body {
 	background-size: 100%;
+	font-family: 'Open Sans', sans-serif;
 }
 
 #poster {
@@ -19,17 +20,8 @@ body {
 	width: 40%;
 	height: 100%;
 	float: left;
-	
-}
-p {
-	margin: 3%;
 }
 
-.textSection {
-	opacity: 0.8;
-	background-color: #ffffff;
-	border-radius: 20px;
-}
 #twitter_stream {
 	margin-top: 3%;
 	margin-right: 3%;
@@ -37,7 +29,48 @@ p {
 	height: 100%;
 	float: right;
 
+}
+
+#search {
+	padding: 10px;
+	border-radius:20px;
+	opacity: 0.8;
+	background-color: #ffffff;
+	width: 40%;
+	float: left;
 } 
+
+#tagline {
+	font-style: italic;
+}
+.tweet {
+	margin: 10px;
+	border-radius: 5px;
+	background-color: #c0deed;
+}
+
+form {
+    margin-left:auto;
+    margin-right: auto;
+    display: inline-block;
+    text-align: center;
+    }
+
+h3 {
+	margin: 3%;
+}
+
+p {
+	margin-left: 3%;
+	margin-right: 3%;
+}
+
+.textSection {
+	opacity: 0.8;
+	background-color: #ffffff;
+	border-radius: 20px;
+}
+
 .diagram {
 	opacity: 0.8;
 	background-color: #ffffff;
