@@ -1,3 +1,5 @@
+%% @author Mikaela Lidström
+
 -module(server_supervisor).
 -export([start_link/0]).
 -export([init/1]).
@@ -5,7 +7,7 @@
 
 start_link() ->
 	supervisor:start_link({local, ?MODULE}, ?MODULE, []),
-	timer:start().
+	schedule:start().
 
 init([]) -> 
 	RestartStrategy = one_for_one,
@@ -19,4 +21,4 @@ init([]) ->
 	Server = {server, {server, start_link, []},
 		Restart, Shutdown, Type, [server]},
 
-	{ok, Supflags, [Server]}.
+	{ok, {Supflags, [Server]}}.
