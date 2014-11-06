@@ -23,7 +23,7 @@ body {
 }
 
 #twitter_stream {
-	margin-top: 3%;
+	margin-top: 1%;
 	margin-right: 3%;
 	width: 25%;
 	height: 100%;
@@ -31,8 +31,35 @@ body {
 
 }
 
+#search_term {
+	padding: 5px;
+	margin-left: 10%;
+	margin-bottom: 2%;
+	margin-top: 2%;
+	border-radius: 10px;
+	background-color: #c0deed;
+	box-shadow: 
+		inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1);
+    border: 0px;
+    font-size:34px;
+    color: #334466;
+
+}
+
+button {
+	padding:5px;
+	background-color: #c0deed;
+	border-radius: 10px;
+	color:#334466;
+	text-decoration:none;
+	box-shadow: 
+		inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1);
+    font-size:34px;
+}
+
 #search {
-	padding: 10px;
 	border-radius:20px;
 	opacity: 0.8;
 	background-color: #ffffff;
