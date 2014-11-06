@@ -1,4 +1,4 @@
--module(timer).
+-module(schedule).
 -export([start/0]).
 
 start() -> 
@@ -10,5 +10,3 @@ start({_Date, {12, 00, 00}}) ->
 	CurrentTime = erlang:localtime(),
 	timer:sleep(1000),
 	start(CurrentTime).
-
-start({{_Date}, {}})
