@@ -15,11 +15,9 @@
 			<img id="imagePoster">
 		</div>
 		<div id="center">
-            <div id="search">
-                <form align="center" action="" method="post">
-                    <input type="text" name="search_term">
-                    <input type="submit" value="Search" onClick="search(this.form)">
-                </form>
+            <div id="search">        
+                    <input type="text" id="search_term" />
+                    <button onclick="search()">Search</button>
             </div>
             <div class="textSection" id="movie_info">
                 <h3 id="title">Title: </h3>
@@ -53,8 +51,26 @@ var keys;
 
 
 function search(form) {
-    var id = form.search_term.value;
-    init(id);
+    var id = $("#search_term").val();
+
+    $.ajax({
+        url: "json.php?id=" + id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            movieJSON = data;
+        }
+    });
+
+    $("#title").text(movieJSON.title);
+    $("#tagline").text(movieJSON.tagline);
+    $("#overview").text(movieJSON.overview);
+    $("#vote_average").text("Average vote: " + movieJSON.vote_average);
+    $("#runtime").text("Runtime: " + movieJSON.runtime + " min");
+    $("#homepage").html('<a href="' + movieJSON.homepage + '">' + movieJSON.homepage + '</a>');
+    $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
+    $("#imagePoster").attr("src", "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path);
+    $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
 
     $.ajax({
         url: "moviekeys.php",
