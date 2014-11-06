@@ -39,6 +39,7 @@
     </div>
     <div class="diagram" id="diagram1">
         <div id="chart1"></div>
+        <div id="chart3"></div>
         <div id="chart2"></div>
     </div>
 
@@ -66,6 +67,14 @@ function updatePage() {
         keys: {
             value: ['Budget', 'Revenue']
         },
+        columns: [
+            ['Opening Weekend', 1000000],
+        ],
+        colors: {
+        Budget: '#ffa500',
+        'Opening Weekend': '#468499',
+        Revenue: '#0099cc',
+        }
         });
 }
 
@@ -116,10 +125,16 @@ var chart1 = c3.generate({
 },
 data: {
         columns: [
-            ['Budget', 100],
-            ['Revenue', 300],
+            ['Budget', 0],
+            ['Opening Weekend', 1000000],
+            ['Revenue', 0],
         ],
     type : 'donut',
+        colors: {
+        Budget: '#ffa500',
+        'Opening Weekend': '#468499',
+        Revenue: '#0099cc',
+    },
     onclick: function (d, i) { console.log("onclick", d, i); },
     onmouseover: function (d, i) { console.log("onmouseover", d, i); },
     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
@@ -145,18 +160,29 @@ var chart2 = c3.generate({
 },
 data: {
     columns: [
-    ['Positives', 152],
-    ['Negatives', 96],
+    ['Amazing', 152],
+    ['Great', 106],
+    ['Good', 96],
+    ['Not too bad', 76],
+    ['Bad', 60],
+    ['Shitty', 50],
     ],
-    type : 'donut',
+    type : 'pie',
     colors: {
-        Positives: '#00c060',
-        Negatives: '#db4437',
+        Amazing: '#009900',
+        Great: '#00cc00',
+        Good: '#00ff00',
+        'Not too bad': '#99ff00',
+        Bad: '#990000',
+        Shitty: '#663300',
     },
     onclick: function (d, i) { console.log("onclick", d, i); },
     onmouseover: function (d, i) { console.log("onmouseover", d, i); },
     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
 },
+ padding: {
+        top: 20,
+    },
 donut: {
     title: "Tweets"
 },
@@ -169,6 +195,54 @@ tooltip: {
 }
 });
 
+d3.select('#chart2 svg').append('text')
+    .attr('x', d3.select('#chart2 svg').node().getBoundingClientRect().width / 2)
+    .attr('y', 16)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '1.4em')
+    .text('Tweet Analysis');
+
+var chart3 = c3.generate({
+   bindto: '#chart3',
+   size: {
+    height: 220,
+    width: 220
+},
+data: {
+    columns: [
+    ['This Movie', 52],
+    ['Other Movies', 106],
+    ],
+    type : 'pie',
+    colors: {
+        'This Movie': '#31698a',
+        'Other Movies': '#c0c0c0',
+    },
+    onclick: function (d, i) { console.log("onclick", d, i); },
+    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+},
+ padding: {
+        top: 20,
+    },
+donut: {
+    title: "Tweets"
+},
+tooltip: {
+    format: {
+        value: function (value, id) {
+            return value+" tweets";
+        }
+    }
+}
+});
+
+d3.select('#chart3 svg').append('text')
+    .attr('x', d3.select('#chart3 svg').node().getBoundingClientRect().width / 2)
+    .attr('y', 16)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '1.4em')
+    .text('Movie-related tweets this month');
 
 </script>
 </body>
