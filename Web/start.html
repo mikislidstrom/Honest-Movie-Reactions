@@ -59,15 +59,14 @@ function updatePage() {
     $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
     $("#imagePoster").attr("src", "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path);
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
+    var jsonArr = [{'Budget':movieJSON.budget, 'Revenue':movieJSON.revenue}];
+
     chart1.load({    
-        json: movieJSON,
+        json: jsonArr,
         keys: {
             value: ['Budget', 'Revenue']
         },
-        names: {
-            'Budget': 'Budget',
-            'Revenue': 'Gross Total'
-        }});
+        });
 }
 
 function search(form) {
@@ -117,8 +116,8 @@ var chart1 = c3.generate({
 },
 data: {
         columns: [
-            ['Budget', 0],
-            ['Gross Total', 0],
+            ['Budget', 100],
+            ['Revenue', 300],
         ],
     type : 'donut',
     onclick: function (d, i) { console.log("onclick", d, i); },
@@ -132,7 +131,7 @@ tooltip: {
     format: {
         value: function (value, id) {
             var format = d3.format('$');
-            return (value >= 1) ? format(value) + 'MM' : format(value) + 'M';
+            return format(value);
         }
     }
 }
