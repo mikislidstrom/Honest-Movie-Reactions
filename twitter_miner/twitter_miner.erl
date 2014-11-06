@@ -19,22 +19,7 @@ get_account_keys(Name) ->
 
 
 twitter_search(Movie) ->
-	URL = "https://api.twitter.com/1.1/search/tweets.json",
-	Params = [{q, Movie}, {language, en}],
-
-
-  	Api_key = XXXXXXXXXX,
-	Api_secret = XXXXXXXXXX,
-	Access_token = XXXXXXXXXX,
-	Access_token_secret = XXXXXXXXXX,
-
-
-	Consumer = {Api_key, Api_secret, hmac_sha1},
-	AccessToken = Access_token,
-  	AccessTokenSecret = Access_token_secret,
-
-
+	
 	ssl:start(),
 	application:start(inets),	
-	%%httpc:request(get, {"https://api.twitter.com/1.1/search/tweets.json?q=%40twitterapp", [{"connection", "close"}]}, [], []).
-	oauth:get(URL, Params, Consumer, AccessToken, AccessTokenSecret).
+	httpc:request(get, {"https://api.twitter.com/1.1/search/tweets.json?q=%40twitterapp", [{"connection", "close"}]}, [], []).
