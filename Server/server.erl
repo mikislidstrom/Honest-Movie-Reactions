@@ -20,7 +20,7 @@ init([]) ->
 
 get_movie_data() ->
 	erlang:display("getting movie data"),
-	movies:id(100).
+	gen_server:cast(server, get_movies).
 
 get_twitter_data() -> 
 	erlang:display("pulling twitter data"),
@@ -28,7 +28,13 @@ get_twitter_data() ->
 
 get_movie_titles() -> ok.
 
-handle_cast(_M, _N) -> ok.
+handle_cast(get_movies, State) -> 
+	test_db:store_movie("600"),
+	{noreply, State};
+
+handle_cast(Message, State) ->
+	erlang:display(Message),
+	{noreply, State}.
 
 handle_info(_M, _N) -> ok.
 
