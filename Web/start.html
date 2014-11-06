@@ -97,9 +97,9 @@ var chart1 = c3.generate({
 },
 data: {
     columns: [
-    ['Budget', 1.5],
-    ['Opening Weekend', 0.345],
-    ['Gross Total', 3.7],
+    ['Budget'].concat(movieJSON.budget),
+    ['Opening Weekend', 0.345], 
+    ['Gross Total'].concat(movieJSON.revenue),
     ],
     type : 'donut',
     onclick: function (d, i) { console.log("onclick", d, i); },
