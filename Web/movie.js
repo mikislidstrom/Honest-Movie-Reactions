@@ -7,6 +7,7 @@ function updatePage() {
     $("#tagline").text(movieJSON.tagline);
     $("#overview").text(movieJSON.overview);
     $("#vote_average").text("Average vote: " + movieJSON.vote_average);
+    $("#release_date").text("Release date: " + movieJSON.release_date);
     $("#runtime").text("Runtime: " + movieJSON.runtime + " min");
     $("#homepage").html('<a href="' + movieJSON.homepage + '">' + movieJSON.homepage + '</a>');
     $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
