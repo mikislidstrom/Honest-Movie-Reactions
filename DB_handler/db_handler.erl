@@ -1,5 +1,5 @@
 -module(db_handler).
--export([put/3, get/2, buckets/0, delete/2]).
+-export([put/3, get/2, buckets/0, keys/1, keys_json/1, delete/2]).
 
 -define(PORT, 10027).
 -define(HOST, "127.0.0.1").
@@ -20,7 +20,7 @@ get(Bucket, Key) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, Obj} = riakc_pb_socket:get(Pid, list_to_binary(Bucket), list_to_binary(Key)),
 	riakc_pb_socket:stop(Pid),
-	binary_to_term(riakc_obj:get_value(Obj)).
+	riakc_obj:get_value(Obj).
 
 buckets() ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
@@ -28,7 +28,19 @@ buckets() ->
 	riakc_pb_socket:stop(Pid),
 	List.
 
-delete(Bucket, Key) ->
+keys_json(Bucket) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
+	{ok, List} = riakc_pb_socket:list_keys(Pid, list_to_binary(Bucket)),
+	riakc_pb_socket:stop(Pid),
+	jiffy:encode(List).
+
+keys(Bucket) ->
+	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
+	{ok, List} = riakc_pb_socket:list_keys(Pid, list_to_binary(Bucket)),
+	riakc_pb_socket:stop(Pid),
+	[binary_to_list(X)|| X <- List].
+
+delete(Bucket, Key) ->
+	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?	PORT),
 	riakc_pb_socket:delete(Pid, list_to_binary(Bucket), list_to_binary(Key)),
 	riakc_pb_socket:stop(Pid).
