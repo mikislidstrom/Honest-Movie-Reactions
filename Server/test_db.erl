@@ -33,7 +33,7 @@ movielist(List) -> movielist(List, []).
 
 movielist([], List) -> List;
 movielist([{Movie}|MovieList], List) ->
-	movielist(MovieList, [{proplists:get_value(<<"id">>, Movie), proplists:get_value(<<"title">>, Movie)}|List]).
+	movielist(MovieList, [{proplists:get_value(<<"id">>, Movie), binary_to_list(proplists:get_value(<<"title">>, Movie))}|List]).
 
 
 %% Get id and title for all movies in db
