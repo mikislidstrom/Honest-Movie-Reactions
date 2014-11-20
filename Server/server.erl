@@ -24,13 +24,27 @@ get_movie_data() ->
 
 get_twitter_data() -> 
 	erlang:display("pulling twitter data"),
-	get_movie_titles().
+	get_twitter_data(test_db:id_title_list()).
+
+get_twitter_data([]) -> ok;
+get_twitter_data([H | T]) ->
+	erlang:display("spawning twitter process"),
+	gen_server:cast(server, {get_tweets, H}),
+	get_twitter_data(T).	
 
 get_movie_titles() -> ok.
 
 handle_cast(get_movies, State) -> 
-	test_db:store_movie("600"),
+	spawn(fun() -> 
+		test_db:store_movie("1000") end),
 	{noreply, State};
+
+handle_cast({get_tweets, {MovieId, Title}}, State) ->
+	spawn(fun() -> 
+		Tweets = twitter_miner:twitter_search(Title),
+	[{TwitterId, {MovieId, Date, Screen_Name, Text, tweet:twitterator(Text)}} 
+	|| {TwitterId, Date, Screen_Name, Text} <- Tweets] end);
+
 
 handle_cast(Message, State) ->
 	erlang:display(Message),

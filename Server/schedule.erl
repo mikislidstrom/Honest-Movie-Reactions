@@ -7,7 +7,7 @@ start() ->
 	erlang:display("timer started"),
 	start(erlang:localtime()).
 
-start({_Date, {16, 43, 00}}) ->
+start({_Date, {09, 50, 00}}) ->
 	server:get_movie_data(),
 	CurrentTime = erlang:localtime(),
 	timer:sleep(1000),
