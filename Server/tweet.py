@@ -20,6 +20,9 @@ def register_tweet(dest):
                     else:
                         pass
             value_list = map(float, value_list)
-            cast(dest, float(sum(value_list)/len(value_list)))
+            if len(value_list) == 0:
+                cast(dest, 0)
+            else:
+                cast(dest, float(sum(value_list)/len(value_list)))
     set_message_handler(tweet)
     return Atom("ok")

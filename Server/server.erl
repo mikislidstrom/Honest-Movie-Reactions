@@ -11,6 +11,7 @@
 start_link() ->
 	gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
+
 stop() -> 
 	gen_server:call(?SERVER, terminate).
 
@@ -29,6 +30,7 @@ get_twitter_data() ->
 get_twitter_data([]) -> ok;
 get_twitter_data([H | T]) ->
 	erlang:display("spawning twitter process"),
+	erlang:display(H),
 	gen_server:cast(server, {get_tweets, H}),
 	get_twitter_data(T).	
 
@@ -36,14 +38,15 @@ get_movie_titles() -> ok.
 
 handle_cast(get_movies, State) -> 
 	spawn(fun() -> 
-		test_db:store_movie("1000") end),
+		test_db:store_movie("121") end),
 	{noreply, State};
 
 handle_cast({get_tweets, {MovieId, Title}}, State) ->
+	erlang:display("handling cast"),
 	spawn(fun() -> 
 		Tweets = twitter_miner:twitter_search(Title),
-	[{TwitterId, {MovieId, Date, Screen_Name, Text, tweet:twitterator(Text)}} 
-	|| {TwitterId, Date, Screen_Name, Text} <- Tweets] end);
+	[io:format("This is the list ~n~p", [Tweet]) || Tweet <- [{TwitterId, {MovieId, Date, Screen_Name, Text, tweet:twitterator(Text)}} 
+	|| {TwitterId, Date, Screen_Name, Text} <- Tweets]] end);
 
 
 handle_cast(Message, State) ->
