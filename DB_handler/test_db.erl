@@ -1,5 +1,5 @@
 -module(test_db).
--export([store_movie/1, get_movie/1, store_movies/1, delete_movies/1, update_movies/0]).
+-export([store_movie/1, get_movie/1, store_movies/1, delete_movies/1, update_movies/0, id_title_list/0]).
 
 %% Stores movies in the database from a list of movie ids
 store_movies([]) -> ok;
@@ -27,3 +27,17 @@ delete_movies([X|Xs]) ->
 %% Refreshes the data for all the movies in the database
 update_movies() ->
 	store_movies(db_handler:keys("Movies")).
+
+%% Helper function
+movielist(List) -> movielist(List, []).
+
+movielist([], List) -> List;
+movielist([{Movie}|MovieList], List) ->
+	movielist(MovieList, [{proplists:get_value(<<"id">>, Movie), proplists:get_value(<<"title">>, Movie)}|List]).
+
+
+%% Get id and title for all movies in db
+id_title_list() ->
+	Keys = db_handler:keys("Movies"),
+	MovieList =[jiffy:decode(get_movie(Id))||Id <- Keys],
+	movielist(MovieList).
