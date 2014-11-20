@@ -1,10 +1,9 @@
 -module(tweet).
--export(main/1, python_start/1, flush/0).
+-export([twitterator/1, python_start/1, flush/0]).
 
-main(FileName) ->
-	{ok, Binary} = file:read_file(FileName),
-	S = string:tokens(binary_to_list(Binary), "\r\n\t "),
-    python_start(S).
+twitterator(Binary) ->
+	List = string:tokens(binary_to_list(Binary), "\r\n\t "),
+    python_start(List).
 
 python_start(List) ->
 	{ok, P} = python:start(),

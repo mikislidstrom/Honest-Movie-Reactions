@@ -6,23 +6,20 @@ def register_tweet(dest):
         lines = []
         x = ''
         value = 0
-        value_list = [0]
+        value_list = []
         with open("sentiment.txt") as f:
             lines = f.readlines()
-            lines = [word.strip() for word in lines]
+            lines = [wordval.strip() for wordval in lines]
             for element in message:
                 x = ''.join(chr(x) for x in element)
-                for word in lines:
-                    wordz = word[1:]
-                    val = word[:1]
-                    if x == wordz:
+                for wordval in lines:
+                    word = wordval[1:]
+                    val = wordval[:1]
+                    if x == word:
                         value_list.append(val)
                     else:
                         pass
             value_list = map(float, value_list)
-            s = sum(value_list)
-            l = len(value_list)
-            m = float(s/l)
-            cast(dest, m)
-    set_message_handler(handler)
+            cast(dest, float(sum(value_list)/len(value_list)))
+    set_message_handler(tweet)
     return Atom("ok")
