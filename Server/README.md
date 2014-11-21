@@ -31,7 +31,7 @@ Start erl with paths by adding the -pa option and the path to riak-erlang-client
 ```
 erl -pa $PATH/*/ebin $PATH/*/deps/*/ebin
 ```
-Where $PATH is the folder containing the riak erlang client. Then compile the erlang modules db___handler, movies and test_db.
+Where $PATH is the folder containing the riak erlang client. Then compile the erlang modules db_handler, movies and test_db.
 ######Add movie
 To add a movie with you can do this easily with the id of the movie by running:
 test_db:store_movie(“100”). 
