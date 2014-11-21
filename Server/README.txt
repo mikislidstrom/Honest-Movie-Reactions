@@ -22,7 +22,7 @@ Clone the repository, and run make in the riak-erlang-client folder to compile i
 Get our code from github, clone repository is easiest. Copy them to a folder where you can work with them because when they are compiled the beam file will be in the same directory and if they are in the git folder they will be sent to git when adding and pushing.
 5. Change some stuff
 In the code you need to add some settings for it to work properly for you. First you need to change the API_KEY value (inside the quotes) in movies.erl to:
-90387aadff905aa5771e9aeb14ab9e3d
+(see online doc)
 And you need to change the PORT value to: 8087
 6. Run erl with path
 Start erl with paths by adding the -pa option and the path to riak-erlang-client
