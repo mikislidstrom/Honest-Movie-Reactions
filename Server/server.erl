@@ -44,8 +44,9 @@ handle_cast({get_tweets, {MovieId, Title}}, State) ->
 	erlang:display("handling cast"),
 	spawn(fun() -> 
 		Tweets = twitter_miner:twitter_search(Title),
-	[test_db:store_tweet({TwitterId, jiffy:encode({[{<<"movie_id">>, list_to_binary(MovieId)}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name},{<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Text)}]}) 
-	|| {TwitterId, Date, Screen_Name, Text} <- Tweets] end);
+	[test_db:store_tweet(integer_to_list(TwitterId), jiffy:encode({[{<<"movie_id">>, MovieId}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name}, {<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Text)}]})) 
+	|| {TwitterId, Date, Screen_Name, Text} <- Tweets] end),
+	{noreply, State};
 
 
 handle_cast(Message, State) ->
