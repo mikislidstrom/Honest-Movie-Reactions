@@ -35,4 +35,3 @@ This will store movie with id 100.
 8. Test the db
 If you are successful and have no errors there should be a movie with the key “100” in a bucket called “Movies”. This can be checked by accessing the HTTP API. Go to the browser and enter url: 127.0.0.1:8098/buckets/Movies/keys/100
 This should display JSON data of the movie which was pulled from the movie db.
-
