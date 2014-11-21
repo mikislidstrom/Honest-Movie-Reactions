@@ -98,6 +98,7 @@
 2negative
 2never
 2nobody
+2not
 2nondescript
 3nonsense
 2noxious
@@ -190,6 +191,7 @@
 5amazing
 5angelic
 4appealing
+3appreciate
 4approve
 4aptitude
 4attractive
@@ -215,6 +217,7 @@
 5divine
 4elegant
 4engaging
+4enjoy
 4enjoyed
 5epic
 3essential
@@ -251,6 +254,8 @@
 4jubilant
 4laugh
 4legendary
+3like
+4love
 4lovely
 4luminous
 4marvelous
