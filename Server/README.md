@@ -20,8 +20,8 @@ Go to this page: http://docs.basho.com/riak/latest/ops/building/installing/debia
 Select the button on the right and download the deb-package and install it.
 ######Start riak
 To start riak after installing it you just open a terminal and type: riak start
-Install riak-erlang-client
-######Go to this page: https://github.com/basho/riak-erlang-client
+######Install riak-erlang-client
+Go to this page: https://github.com/basho/riak-erlang-client
 Clone the repository, and run make in the riak-erlang-client folder to compile it.
 ######Our code
 Get our code from github, clone repository is easiest. Copy them to a folder where you can work with them because when they are compiled the beam file will be in the same directory and if they are in the git folder they will be sent to git when adding and pushing.
@@ -42,7 +42,6 @@ This will store movie with id 100.
 ######Test the db
 If you are successful and have no errors there should be a movie with the key “100” in a bucket called “Movies”. This can be checked by accessing the HTTP API. Go to the browser and enter url: 127.0.0.1:8098/buckets/Movies/keys/100
 This should display JSON data of the movie which was pulled from the movie db.
-
 ###Other dependencies
 ######Jiffy
 https://github.com/davisp/jiffy
