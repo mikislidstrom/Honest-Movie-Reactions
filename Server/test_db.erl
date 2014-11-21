@@ -49,3 +49,7 @@ store_releases() ->
 %% Gets and stores the latest popular releases for a certain date
 store_releases(Date) ->
 	store_movies(movies:popular(movies:releases_day(Date))).
+
+%% Store a tweet
+store_tweet(Key, Obj) ->
+	db_handler:put("Tweets", Key, Obj).
