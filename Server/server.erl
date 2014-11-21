@@ -23,6 +23,7 @@ get_movie_data() ->
 	erlang:display("getting movie data"),
 	gen_server:cast(server, get_movies).
 
+%% Gets movie title and id from database and 
 get_twitter_data() -> 
 	erlang:display("pulling twitter data"),
 	get_twitter_data(test_db:id_title_list()).
@@ -32,21 +33,19 @@ get_twitter_data([H | T]) ->
 	erlang:display("spawning twitter process"),
 	erlang:display(H),
 	gen_server:cast(server, {get_tweets, H}),
-	get_twitter_data(T).	
-
-get_movie_titles() -> ok.
+	get_twitter_data(T).
 
 handle_cast(get_movies, State) -> 
 	spawn(fun() -> 
-		test_db:store_movie("121") end),
+		test_db:store_releases() end),
 	{noreply, State};
 
 handle_cast({get_tweets, {MovieId, Title}}, State) ->
 	erlang:display("handling cast"),
 	spawn(fun() -> 
 		Tweets = twitter_miner:twitter_search(Title),
-	[io:format("This is the list ~n~p", [Tweet]) || Tweet <- [{TwitterId, {MovieId, Date, Screen_Name, Text, tweet:twitterator(Text)}} 
-	|| {TwitterId, Date, Screen_Name, Text} <- Tweets]] end);
+	[test_db:store_tweet({TwitterId, jiffy:encode({[{<<"movie_id">>, list_to_binary(MovieId)}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name},{<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Text)}]}) 
+	|| {TwitterId, Date, Screen_Name, Text} <- Tweets] end);
 
 
 handle_cast(Message, State) ->
