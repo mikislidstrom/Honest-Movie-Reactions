@@ -1,7 +1,7 @@
 To run this software you will need a Erlang/Python interface called ErlPort.
 ----
 It can be downloaded from: http://erlport.org/downloads/ 
-Step by step guide for isntallation:
+Step by step guide for isntallation
 1. Download the right file for your Erlang version (can be seen when starting the shell, the version number is next to Erlang / OTP ##)
 2. Run code:lib_dir(). in the Erlang shell and you will see the directory for your Erlang library.
 3. Put the folder in that directory.
