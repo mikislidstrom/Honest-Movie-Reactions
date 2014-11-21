@@ -10,7 +10,7 @@ To test it write the following in your shell:
 {ok, P} = python:start().
 python:stop(P).
 
-Instructions for installing on Ubuntu
+Instructions for installing Riak with Erlang client on Ubuntu
 ----
 ######Install Riak
 Go to this page: http://docs.basho.com/riak/latest/ops/building/installing/debian-ubuntu/
