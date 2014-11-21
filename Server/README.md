@@ -1,4 +1,5 @@
-#1 To run this software you will need a Erlang/Python interface called ErlPort.
+To run this software you will need a Erlang/Python interface called ErlPort.
+----
 It can be downloaded from: http://erlport.org/downloads/ 
 Step by step guide for isntallation:
 1. Download the right file for your Erlang version (can be seen when starting the shell, the version number is next to Erlang / OTP ##)
@@ -9,7 +10,8 @@ To test it write the following in your shell:
 {ok, P} = python:start().
 python:stop(P).
 
-#2 Instructions for installing on Ubuntu
+Instructions for installing on Ubuntu
+----
 1. Install Riak 
 Go to this page: http://docs.basho.com/riak/latest/ops/building/installing/debian-ubuntu/
 Select the button on the right and download the deb-package and install it.
