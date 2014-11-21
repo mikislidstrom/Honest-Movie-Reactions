@@ -16,7 +16,10 @@
 3coarse
 3cold
 3cold-hearted
+3confuse
+2confuses
 3confused
+2confusing
 2contradictory
 3crazy
 3creepy
@@ -114,6 +117,9 @@
 3poisonous
 2poor
 3prejudice
+3provoke
+3provoking
+2provokes
 3questionable
 3quirky
 2quit
@@ -135,6 +141,7 @@
 2shoddy
 3shocking
 2sick
+2sickens
 2sickening
 2sinister
 3slimy
@@ -255,10 +262,13 @@
 4laugh
 4legendary
 3like
+3liked
+3likes
 4love
 4lovely
 4luminous
 4marvelous
+5masterpiece
 4masterful
 4meaningful
 4miraculous
@@ -266,6 +276,7 @@
 3moving
 3natural
 3nice
+3ok
 3okay
 4optimistic
 5perfect
@@ -299,6 +310,7 @@
 4victorious
 4vigorous
 4virtuous
+3well
 4wholesome
 4wonderful
 4wondrous
