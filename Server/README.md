@@ -28,7 +28,9 @@ In the code you need to add some settings for it to work properly for you. First
 And you need to change the PORT value to: 8087
 6. Run erl with path
 Start erl with paths by adding the -pa option and the path to riak-erlang-client
+´´´
 erl -pa $PATH/<nowiki>*</nowiki>/ebin $PATH/<nowiki>*</nowiki>/deps/*/ebin
+´´´
 Where $PATH is the folder containing the riak erlang client. Then compile the erlang modules db_handler, movies and test_db.
 7. Add movie
 To add a movie with you can do this easily with the id of the movie by running:
