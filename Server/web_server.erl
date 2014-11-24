@@ -2,7 +2,7 @@
 -export([start/0, movies/3, movie_ids/3, tweets/3, stop/1]).
 
 %%% Basic web server for serving JSON data from the database to a web page
-%%% URL localhost:8081:/erl/web_server:function
+%%% URL localhost:8081/erl/web_server:function
 
 
 start() ->
@@ -57,9 +57,8 @@ movie_ids(SessionID, _Env, _Input) ->
 
 tweets(SessionID, Env, _Input) ->
 	Query = proplists:get_value(query_string, Env),
-
-	io:format("~p~n", [Query]),
 	mod_esi:deliver(SessionID, [
-		"Content-Type: application/json\r\n\r\n",
-		Query
+		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
+		db_handler:get("Tweets", Query)
 		]).
+
