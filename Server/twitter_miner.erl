@@ -3,12 +3,12 @@
 
 twitter_search(Movie) ->
 	URL = "https://api.twitter.com/1.1/search/tweets.json",
-  Params = [{q, Movie}, {lang, en}],
+  Params = [{q, Movie}, {lang, en}, {count, 100}],
 
-  Api_key = "QtSP14USgvF4Zj9IKHy2I5bKN",
-  Api_secret = "c7j35Y4vU7mw2K5vdm4oAwS6VLViLutd4ZcORCC8ByAJCBm1qV",
-  Access_token = "2827251826-bGt8aDBRHkySUiHW5XJBkOJ8u3vZFNS0gUhgHd5",
-  Access_token_secret = "Ktwz5o3bYYsLSBA8fpTOk78UFkCGNtGU9NVV7b0fwoP2M",
+  Api_key = "xxx",
+  Api_secret = "xxx",
+  Access_token = "xxx-xxx",
+  Access_token_secret = "xxx",
 
   Consumer = {Api_key, Api_secret, hmac_sha1},
   Token = Access_token,
@@ -29,7 +29,6 @@ twitter_search(Movie) ->
 
     List = [twitter_miner:unpack(X)||{X}<-A2],
     List.
-    %lists:map(fun unpack/1, A3).
 
   unpack(List) ->
     {<<"id">>,  Id} = lists:keyfind(<<"id">>, 1, List),

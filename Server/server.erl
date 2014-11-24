@@ -23,11 +23,12 @@ get_movie_data() ->
 	erlang:display("getting movie data"),
 	gen_server:cast(server, get_movies).
 
-%% Gets movie title and id from database and 
+%% Gets movie title and id from database
 get_twitter_data() -> 
 	erlang:display("pulling twitter data"),
 	get_twitter_data(test_db:id_title_list()).
 
+%% 
 get_twitter_data([]) -> ok;
 get_twitter_data([H | T]) ->
 	erlang:display("spawning twitter process"),
