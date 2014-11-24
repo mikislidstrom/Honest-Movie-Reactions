@@ -40,6 +40,7 @@ stop(Pid) ->
 	inets:stop(httpd, Pid).
 
 %% Serves the movie information depending on the query as JSON data
+%% Accessed with URL "localhost:8081/erl/web_server:movies?ID" where ID is the movie id
 movies(SessionID, Env, _Input) ->
 	Query = proplists:get_value(query_string, Env),
 	mod_esi:deliver(SessionID, [
@@ -48,13 +49,15 @@ movies(SessionID, Env, _Input) ->
 		]).
 
 %% Serves the ids of all the movies in db as a JSON array
+%% Accessed with URL "localhost:8081/erl/web_server:movie_ids"
 movie_ids(SessionID, _Env, _Input) ->
 	
 	mod_esi:deliver(SessionID, [
 		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
 		db_handler:keys_json("Movies")
 		]).
-
+%% Serves the tweet info depending on the query
+%% Accessed with URL "localhost:8081/erl/web_server:tweets?ID" where ID is the tweet id
 tweets(SessionID, Env, _Input) ->
 	Query = proplists:get_value(query_string, Env),
 	mod_esi:deliver(SessionID, [
