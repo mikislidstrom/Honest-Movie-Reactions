@@ -1,5 +1,5 @@
 -module(test_db).
--export([store_movie/1, get_movie/1, store_movies/1, delete_movies/1, update_movies/0, id_title_list/0, store_releases/0, store_releases/1]).
+-export([store_movie/1, get_movie/1, store_movies/1, delete_all/1, delete_movies/1, update_movies/0, id_title_list/0, store_releases/0, store_releases/1, store_tweet/2]).
 
 %% Stores movies in the database from a list of movie ids
 store_movies([]) -> ok;
@@ -23,6 +23,16 @@ delete_movies([]) -> ok;
 delete_movies([X|Xs]) ->
 	db_handler:delete("Movies", X),
 	delete_movies(Xs).
+
+%% Deletes all objects in the db for a certain bucket
+delete_all(Bucket) -> 
+	delete_all(Bucket, db_handler:keys(Bucket)).
+
+delete_all(_Bucket, []) -> ok;
+delete_all(Bucket, [X|Xs]) ->
+	db_handler:delete(Bucket, X),
+	delete_all(Bucket, Xs).
+
 
 %% Refreshes the data for all the movies in the database
 update_movies() ->
