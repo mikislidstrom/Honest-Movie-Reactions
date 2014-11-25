@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/d3.js"></script>
+    <script src="d3-cloud/d3.layout.cloud.js"></script>
+	<script src="c3-0.3.0/c3.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="movie.js"></script>
+    
+</head>
+
+<body>
+
+    <div class="diagram" id="diagram2">
+        <div id="chart4"></div>
+        <div id="chart5"></div>        
+    </div>
+		<div id="center">
+            <div id="search">        
+                    <input type="text" id="search_term" />
+                    <button onclick="search()">Search</button>
+                    <button onclick="random()">Random</button>
+            </div>
+
+        </div>
+
+    <div class="diagram" id="diagram1">
+        <div id="chart1"></div>
+        <div id="chart3"></div>
+        <div id="chart2"></div>
+    </div>
+
+</div>
+<script src="charts.js"></script>
+</body>
+</html>

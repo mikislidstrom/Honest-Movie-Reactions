@@ -4,7 +4,6 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-
 	<script src="c3-0.3.0/c3.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="movie.js"></script>
@@ -24,11 +23,15 @@
                     <button onclick="random()">Random</button>
             </div>
             <div class="textSection" id="movie_info">
-                <h3 id="title">Title: </h3>
+                <h3 id="title">Title: 
+                    <div id="vote_average">
+                    <div id="vote_average_t">(Avg. Vote)
+                    </div>
+                    </div>
+                </h3>
                 <p id="tagline"></p>
                 <p id="overview">Description: </p>
                 <p id="genres">Genres: </p>
-                <p id="vote_average">Vote average: </p>
                 <P id="release_date"></p>
                 <p id="runtime"></p>
                 <p id="homepage">Homepage: </p>

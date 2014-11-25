@@ -124,3 +124,88 @@ d3.select('#chart3 svg').append('text')
     .attr('text-anchor', 'middle')
     .style('font-size', '1.4em')
     .text('Movie-related tweets this month');
+
+var chart4 = c3.generate({
+    bindto: '#chart4',
+    data: {
+        columns: [
+            ['Movie1', 30, 200, 100],
+            ['Movie2', 130, 100, 140]
+        ],
+        type: 'bar'
+    },
+        axis: {
+        x: {
+            type: 'category',
+            categories: ['Budget', 'Opening Weekend', 'Revenue']
+        }
+    },
+    bar: {
+        width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
+        // or
+        //width: 100 // this makes bar width 100px
+    }
+});
+
+var chart5 = c3.generate({
+    bindto: '#chart5',
+    data: {
+        columns: [
+            ['Movie1', 79, 72, 76, 82],
+        ],
+        type: 'bar'
+    },
+        axis: {
+            rotated: true,
+
+        x: {
+            type: 'category',
+            categories: ['MoSCoW', 'The Movie Database', 'Rotten Tomatoes', 'IMDb']
+        }
+    },
+    bar: {
+        width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+        }
+        // or
+        //width: 100 // this makes bar width 100px
+    }
+});
+    
+  var fill = d3.scale.category20();
+
+  var word = [
+        "Good", "Bad", "Awesome", "Amazing", "Sucked", "Shit", "OK",
+        "Great", "Cool"]
+
+  d3.layout.cloud().size([300, 300])
+      .words(word.map(function(d) {
+        return {text: d, size: 10 + Math.random() * 90};
+      }))
+      .padding(5)
+      .rotate(function() { return ~~(Math.random() * 2) * 90; })
+      .font("Impact")
+      .fontSize(function(d) { return d.size; })
+      .on("end", draw)
+      .start();
+
+  function draw(words) {
+    d3.select("body").append("svg")
+        .attr("width", 300)
+        .attr("height", 300)
+      .append("g")
+        .attr("transform", "translate(150,150)")
+      .selectAll("text")
+        .data(words)
+      .enter().append("text")
+        .style("font-size", function(d) { return d.size + "px"; })
+        .style("font-family", "Impact")
+        .style("fill", function(d, i) { return fill(i); })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+        })
+        .text(function(d) { return d.text; });
+  };

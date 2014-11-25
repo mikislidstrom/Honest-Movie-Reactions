@@ -22,6 +22,24 @@ body {
 	float: left;
 }
 
+#vote_average {
+	float: right;
+	padding: 5px;
+	border-radius: 10px;
+	background-color: #CC9900;
+	box-shadow: 
+	inset 0 0 8px  rgba(0,0,0,0.1),
+          0 0 16px rgba(0,0,0,0.1);
+    border: 0px;
+    font-size:34px;
+}
+
+#vote_average_t {
+	margin-left: auto;
+    margin-right: auto;
+	font-size:10px;
+}
+
 #twitter_stream {
 	margin-top: 1%;
 	margin-right: 3%;
@@ -104,13 +122,21 @@ p {
 	border-radius: 20px;
 	float : left;
 }
+
 #diagram1 {
 	margin-top: 3%;
 	margin-bottom: 7%;
 	width: 40%;
 	height: 100%;
 	float: left;
-	
+}
+
+#diagram2 {
+	margin-top: 3%;
+	margin-bottom: 7%;
+	width: 40%;
+	height: 100%;
+	float: left;
 }
 
 #chart1 {
@@ -122,5 +148,13 @@ p {
 }
 
 #chart3 {
+	float: left;
+}
+
+#chart4 {
+	float: left;
+}
+
+#chart5 {
 	float: left;
 }
