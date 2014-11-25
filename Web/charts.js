@@ -1,14 +1,14 @@
 var chart1 = c3.generate({
    bindto: '#chart1',
    size: {
-    height: 240,
-    width: 240
+    height: 230,
+    width: 230
 },
 data: {
         columns: [
-            ['Budget', 0],
+            ['Budget', 30000000],
             ['Opening Weekend', 10000000],
-            ['Revenue', 0],
+            ['Revenue', 50000000],
         ],
     type : 'donut',
         colors: {
@@ -80,7 +80,7 @@ d3.select('#chart2 svg').append('text')
     .attr('x', d3.select('#chart2 svg').node().getBoundingClientRect().width / 2)
     .attr('y', 16)
     .attr('text-anchor', 'middle')
-    .style('font-size', '1.4em')
+    .style('font-size', '1.9em')
     .text('Tweet Analysis');
 
 var chart3 = c3.generate({
@@ -122,11 +122,49 @@ d3.select('#chart3 svg').append('text')
     .attr('x', d3.select('#chart3 svg').node().getBoundingClientRect().width / 2)
     .attr('y', 16)
     .attr('text-anchor', 'middle')
-    .style('font-size', '1.4em')
+    .style('font-size', '1.9em')
     .text('Movie-related tweets this month');
 
 var chart4 = c3.generate({
     bindto: '#chart4',
+       size: {
+    height: 240
+},
+    data: {
+        columns: [
+            ['Amazing', 30, 200, 100, 400, 150, 250, 90],
+            ['Great', 45, 20, 10, 40, 150, 300, 100],
+            ['Good', 12, 100, 100, 40, 85, 90, 80],
+            ['Not too bad', 60, 70, 110, 500, 200, 200, 190],
+            ['Bad', 50, 20, 50, 40, 75, 100, 120],
+            ['Shitty', 20, 20, 65, 40, 50, 25, 15]
+        ],
+            colors: {
+        Amazing: '#009900',
+        Great: '#00cc00',
+        Good: '#00ff00',
+        'Not too bad': '#99ff00',
+        Bad: '#990000',
+        Shitty: '#663300',
+    },
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        }
+    },
+});
+
+d3.select('#chart4 svg').append('text')
+    .attr('x', d3.select('#chart4 svg').node().getBoundingClientRect().width / 2)
+    .attr('y', 16)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '1.9em')
+    .text('Last Week - Tweet Sentiment Analysis');
+
+var chart5 = c3.generate({
+    bindto: '#chart5',
     data: {
         columns: [
             ['Movie1', 30, 200, 100],
@@ -149,8 +187,8 @@ var chart4 = c3.generate({
     }
 });
 
-var chart5 = c3.generate({
-    bindto: '#chart5',
+var chart6 = c3.generate({
+    bindto: '#chart6',
     data: {
         columns: [
             ['Movie1', 79, 72, 76, 82],
@@ -177,8 +215,8 @@ var chart5 = c3.generate({
   var fill = d3.scale.category20();
 
   var word = [
-        "Good", "Bad", "Awesome", "Amazing", "Sucked", "Shit", "OK",
-        "Great", "Cool"]
+        "Hello", "world", "normally", "you", "want", "more", "words",
+        "than", "this"]
 
   d3.layout.cloud().size([300, 300])
       .words(word.map(function(d) {
@@ -209,3 +247,9 @@ var chart5 = c3.generate({
         })
         .text(function(d) { return d.text; });
   };
+
+
+
+
+
+
