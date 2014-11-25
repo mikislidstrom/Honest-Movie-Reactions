@@ -9,7 +9,9 @@ python_start(List) ->
 	{ok, P} = python:start(),
 	python:call(P, tweet, register_tweet, [self()]),
 	python:cast(P, List),
-	flush().
+	Rating = flush(),
+	python:stop(P),
+	Rating.
 
 flush() ->
 	receive
