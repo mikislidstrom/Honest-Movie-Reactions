@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+
+"""Tweet.py: This module get a list from Erlang and give it a value based on each word."""
+
+__author__  = "Henrik Edholm"
+__credits__ = ["Mikaela Lidström, Elsa Wide, Johan Nilsson"]
+
 from erlport.erlterms import Atom
 from erlport.erlang import set_message_handler, cast
 
