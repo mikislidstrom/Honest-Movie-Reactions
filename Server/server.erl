@@ -28,10 +28,13 @@ get_twitter_data() ->
 	erlang:display("pulling twitter data"),
 	get_twitter_data(test_db:id_title_list()).
 
+update_statistics() ->
+	ok.
+
 %% 
 get_twitter_data([]) -> ok;
 get_twitter_data([H | T]) ->
-	erlang:display("spawning twitter process"),
+	erlang:display(erlang:localtime()),
 	erlang:display(H),
 	gen_server:cast(server, {get_tweets, H}),
 	get_twitter_data(T).
@@ -42,7 +45,6 @@ handle_cast(get_movies, State) ->
 	{noreply, State};
 
 handle_cast({get_tweets, {MovieId, Title}}, State) ->
-	erlang:display("handling cast"),
 	spawn(fun() -> 
 		Tweets = twitter_miner:twitter_search(Title),
 	[test_db:store_tweet(integer_to_list(TwitterId), jiffy:encode({[{<<"movie_id">>, MovieId}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name}, {<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Text)}]})) 
