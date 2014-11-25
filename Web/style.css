@@ -24,7 +24,7 @@ body {
     margin-right: auto;
 }
 
-#average_vote {
+#vote_average {
 	float: right;
 	padding: 5px;
 	border-radius: 10px;
@@ -36,7 +36,7 @@ body {
     font-size:34px;
 }
 
-#average_vote_t {
+#vote_average_t {
 	margin-left: auto;
     margin-right: auto;
 	font-size:10px;
