@@ -163,6 +163,7 @@ d3.select('#chart4 svg').append('text')
     .style('font-size', '1.9em')
     .text('Last Week - Tweet Sentiment Analysis');
 
+
 var chart5 = c3.generate({
     bindto: '#chart5',
     data: {
@@ -173,6 +174,11 @@ var chart5 = c3.generate({
         type: 'bar'
     },
         axis: {
+        y : {
+            tick: {
+                format: function (d) { return "$" + d + "M"; }
+                }
+            },
         x: {
             type: 'category',
             categories: ['Budget', 'Opening Weekend', 'Revenue']
@@ -187,21 +193,36 @@ var chart5 = c3.generate({
     }
 });
 
+d3.select('#chart5 svg').append('text')
+    .attr('x', d3.select('#chart5 svg').node().getBoundingClientRect().width / 2)
+    .attr('y', 16)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '1.9em')
+    .text('Box Office');
+
 var chart6 = c3.generate({
     bindto: '#chart6',
     data: {
         columns: [
-            ['Movie1', 79, 72, 76, 82],
+            ['Movie1', 0.79, 0.72, 0.76, 0.82],
+            ['Movie2', 0.67, 0.62, 0.56, 0.69],
         ],
         type: 'bar'
     },
         axis: {
             rotated: true,
 
+        y : {
+            tick: {
+                format: d3.format("%,")
+                }
+            },
+
         x: {
             type: 'category',
             categories: ['MoSCoW', 'The Movie Database', 'Rotten Tomatoes', 'IMDb']
         }
+
     },
     bar: {
         width: {
@@ -211,42 +232,50 @@ var chart6 = c3.generate({
         //width: 100 // this makes bar width 100px
     }
 });
+
+d3.select('#chart6 svg').append('text')
+    .attr('x', d3.select('#chart6 svg').node().getBoundingClientRect().width / 2)
+    .attr('y', 16)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '1.9em')
+    .text('Ratings');
+
+var chart7 = c3.generate({
+    bindto: '#chart7',
+       size: {
+    height: 240
+},
+    data: {
+        columns: [
+            ['Movie1', 30, 200, 100, 130, 150, 250, 90],
+            ['Movie2', 45, 20, 10, 40, 150, 300, 100],
+        ],
+            colors: {
+        Amazing: '#009900',
+        Great: '#00cc00',
+        Good: '#00ff00',
+        'Not too bad': '#99ff00',
+        Bad: '#990000',
+        Shitty: '#663300',
+    },
+    },
+    axis: {
+        x: {
+            type: 'category',
+            categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        }
+    },
+});
+
+d3.select('#chart7 svg').append('text')
+    .attr('x', d3.select('#chart7 svg').node().getBoundingClientRect().width / 2)
+    .attr('y', 16)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '1.9em')
+    .text('Last Week - Amount of Tweets');
     
-  var fill = d3.scale.category20();
 
-  var word = [
-        "Hello", "world", "normally", "you", "want", "more", "words",
-        "than", "this"]
-
-  d3.layout.cloud().size([300, 300])
-      .words(word.map(function(d) {
-        return {text: d, size: 10 + Math.random() * 90};
-      }))
-      .padding(5)
-      .rotate(function() { return ~~(Math.random() * 2) * 90; })
-      .font("Impact")
-      .fontSize(function(d) { return d.size; })
-      .on("end", draw)
-      .start();
-
-  function draw(words) {
-    d3.select("body").append("svg")
-        .attr("width", 300)
-        .attr("height", 300)
-      .append("g")
-        .attr("transform", "translate(150,150)")
-      .selectAll("text")
-        .data(words)
-      .enter().append("text")
-        .style("font-size", function(d) { return d.size + "px"; })
-        .style("font-family", "Impact")
-        .style("fill", function(d, i) { return fill(i); })
-        .attr("text-anchor", "middle")
-        .attr("transform", function(d) {
-          return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-        })
-        .text(function(d) { return d.text; });
-  };
+    
 
 
 
