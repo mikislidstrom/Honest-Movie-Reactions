@@ -99,9 +99,7 @@
 3naughty
 2negate
 2negative
-2never
 2nobody
-2not
 2nondescript
 3nonsense
 2noxious
@@ -204,6 +202,7 @@
 4attractive
 5awesome
 4beaming
+5best
 5beautiful
 4beneficial
 4bliss
@@ -253,6 +252,7 @@
 4impressive
 5incredible
 4innovative
+4inspiring
 4intellectual
 4intelligent
 4inventive
@@ -266,14 +266,14 @@
 3likes
 4love
 4lovely
-4luminous
+4luminous	
 4marvelous
 5masterpiece
 4masterful
 4meaningful
 4miraculous
 3motivating
-3moving
+4moving
 3natural
 3nice
 3ok
