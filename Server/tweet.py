@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+#title          :tweet.py
+#description    :This module get a list from Erlang and give it a value based on each word.
+#author         :Henrik Edholm
+#contributors   :Mikaela Lidstrom, Elsa Wide & Johan Nilsson
+#usage          :tweet.erl
+#==========================================================================================
 
-"""Tweet.py: This module get a list from Erlang and give it a value based on each word."""
-
-__author__  = "Henrik Edholm"
-__credits__ = ["Mikaela Lidström, Elsa Wide, Johan Nilsson"]
-
+# Import the modules needed to run the script
 from erlport.erlterms import Atom
 from erlport.erlang import set_message_handler, cast
 
@@ -18,7 +20,7 @@ def register_tweet(dest):
             lines = f.readlines()
             lines = [wordval.strip() for wordval in lines]
             for element in message:
-                x = ''.join(chr(x) for x in element)
+                x = ''.join(chr(x) for x in element).lower()
                 for wordval in lines:
                     word = wordval[1:]
                     val = wordval[:1]
