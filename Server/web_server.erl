@@ -59,9 +59,9 @@ movie_ids(SessionID, _Env, _Input) ->
 %% Serves the tweet info depending on the query
 %% Accessed with URL "localhost:8081/erl/web_server:tweets?ID" where ID is the tweet id
 tweets(SessionID, Env, _Input) ->
-	Query = proplists:get_value(query_string, Env),
+	[MovieId, TweetId] = string:tokens(proplists:get_value(query_string, Env), "&"),
 	mod_esi:deliver(SessionID, [
 		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
-		db_handler:get("Tweets", Query)
+		db_handler:get(MovieId, TweetId)
 		]).
 
