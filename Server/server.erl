@@ -47,7 +47,7 @@ handle_cast(get_movies, State) ->
 handle_cast({get_tweets, {MovieId, Title}}, State) ->
 	spawn(fun() -> 
 		Tweets = twitter_miner:twitter_search(Title),
-	[test_db:store_tweet(integer_to_list(TwitterId), jiffy:encode({[{<<"movie_id">>, MovieId}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name}, {<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Text)}]})) 
+	[test_db:store_tweet(integer_to_list(MovieId), integer_to_list(TwitterId), jiffy:encode({[{<<"movie_id">>, MovieId}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name}, {<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Text)}]})) 
 	|| {TwitterId, Date, Screen_Name, Text} <- Tweets, tweet:twitterator(Text) > 0] end),
 	{noreply, State};
 

@@ -1,7 +1,7 @@
 -module(db_handler).
--export([put/3, get/2, buckets/0, keys/1, keys_json/1, delete/2]).
+-export([put/3, get/2, buckets/0, keys/1, keys_json/1, delete/2, cal_keys/1]).
 
--define(PORT, 10017).
+-define(PORT, 8087).
 -define(HOST, "127.0.0.1").
 
 %%% Module works as a wrapper for the riak-erlang-client 
@@ -50,3 +50,7 @@ delete(Bucket, Key) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?	PORT),
 	riakc_pb_socket:delete(Pid, list_to_binary(Bucket), list_to_binary(Key)),
 	riakc_pb_socket:stop(Pid).
+
+cal_keys(Bucket) ->
+	M = 0,
+	lists:sum([M + 1 || _X <- keys(Bucket)]). 
