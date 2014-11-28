@@ -1,4 +1,5 @@
 var movieJSON;
+var titles;
 var id = "101";
 var keys;
 
@@ -42,6 +43,7 @@ function random() {
     });
 
 
+
     /*var list = ["500","123","102651","157336","205587","106","97","120","116","254904","245891","262543","103","96","100","13","113","239563","207933","107","122","98566","114","112","125","603","111","115","124","98","121","105","101","95","240832","228150","104","118","117","204922", "137113", "184315", "91314", "225886", "241254", "189", "138103"];*/
     var r = Math.floor((Math.random() * keys.length));
 
@@ -54,36 +56,61 @@ function random() {
             movieJSON = data;
         }
     });
-
     updatePage();   
 }
 
 function search() {
+    var term = $("#search_term").val().toLowerCase();
+    if (term != "") {
+        var keys = Object.keys(titles);
+        var key = "";
+        var loop = true;
+        var found = false;
+        var len = keys.length;
+        var i = 0;
+        while(loop) {
+            key = keys[i];
+            if(key.toLowerCase().indexOf(term) > -1) {
+                found = true;
+                loop = false;
+            };
+            i++;
+            if (i>=len) {
+                loop = false;
+            };
+        }
+        if(found) {
+            var id = titles[key];
+            $.ajax({
+                url: "http://localhost:8081/erl/web_server:movies?" + id,
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    movieJSON = data;
+                }  
+            });
+            updatePage();
+        };
+    };
+
+
+    /*
     var id = $("#search_term").val();
 
-    $.ajax({
-        url: "http://localhost:8081/erl/web_server:movies?" + id,
-        async: false,
-        dataType: 'json',
-        success: function(data) {
-            movieJSON = data;
-        }
-    });
-
-    updatePage();
+     */
 }
 
 function init() {
     
     $.ajax({
-        url: "http://localhost:8081/erl/web_server:movies?" + id,
+        url: "http://localhost:8081/erl/web_server:movie_titles",
         async: false,
         dataType: 'json',
         success: function(data) {
-            movieJSON = data;
+            titles = data;
         }
     });
 
-    updatePage();
+    random();
 
 };
