@@ -1,6 +1,6 @@
 %% @author Mikaela Lidström
 
--module(server_supervisor).
+-module(webserver_supervisor).
 -export([start_link/0]).
 -export([init/1]).
 -behaviour(supervisor).
@@ -8,7 +8,6 @@
 %% starts the supervisor and the Schedule.
 start_link() ->
 	supervisor:start_link({local, ?MODULE}, ?MODULE, []),
-	schedule:start().
 
 
 init([]) -> 
@@ -21,12 +20,9 @@ init([]) ->
 	Shutdown = 1000,
 	Type = worker,
 
+%% WebServer worker.
 	WebServer = {web_server, {web_server, start, []},
 		Restart, Shutdown, Type, [web_server]},
 
-%% Server worker
-	Server = {server, {server, start_link, []},
-		Restart, Shutdown, Type, [server]},
-
-%% start workers.
-	{ok, {Supflags, [Server]}}.
+%% start worker.
+	{ok, {Supflags, [WebServer]}}.
