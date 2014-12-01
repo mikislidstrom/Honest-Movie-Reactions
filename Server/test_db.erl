@@ -1,5 +1,5 @@
 -module(test_db).
--export([store_movie/1, get_movie/1, store_movies/1, delete_all/1, delete_movies/1, update_movies/0, id_title_list/0, store_releases/0, store_releases/1, store_tweet/3]).
+-export([store_movie/1, get_movie/1, store_movies/1, delete_all/1, delete_movies/1, update_movies/0, id_title_list/0, store_releases/0, store_releases/1, store_tweet/3, move_tweets/1]).
 
 %% Stores movies in the database from a list of movie ids
 store_movies([]) -> ok;
@@ -63,3 +63,12 @@ store_releases(Date) ->
 %% Store a tweet
 store_tweet(Bucket, Key, Obj) ->
 	db_handler:put(Bucket, Key, Obj).
+
+move_tweets(From, To) ->
+	move_tweets_list(db_handler:keys(From)).
+
+move_tweets_list([], To) -> ok;
+move_tweets_list([H|T], To) -> 
+	[{[{<<"movie_id">>, Id}, _Date, _Name, _Text, _Rating]}]   = [jiffy:decode(db_handler:get(To, H))],
+	store_tweet(erlang:integer_to_list(Id), H, db_handler:get(To, H)),
+	move_tweets_list(T).

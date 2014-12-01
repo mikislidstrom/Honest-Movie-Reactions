@@ -53,4 +53,9 @@ delete(Bucket, Key) ->
 
 cal_keys(Bucket) ->
 	M = 0,
-	lists:sum([M + 1 || _X <- keys(Bucket)]). 
+	lists:sum([M + 1 || _X <- keys(Bucket)]).
+
+
+
+
+
