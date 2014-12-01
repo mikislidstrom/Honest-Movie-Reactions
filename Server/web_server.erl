@@ -65,3 +65,8 @@ tweets(SessionID, Env, _Input) ->
 		db_handler:get(MovieId, TweetId)
 		]).
 
+movie_titles(SessionID, _Env, _Input) ->
+	mod_esi:deliver(SessionID, [
+		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
+		jiffy:encode({mapred:titles()})
+		]).

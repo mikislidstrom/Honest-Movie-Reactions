@@ -92,12 +92,6 @@ function search() {
             updatePage();
         };
     };
-
-
-    /*
-    var id = $("#search_term").val();
-
-     */
 }
 
 function init() {
