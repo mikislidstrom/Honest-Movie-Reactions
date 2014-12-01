@@ -4,7 +4,7 @@
 %%		 and finally returns the value to the server.
 
 -module(tweet).
--export([twitterator/2, python_start/2, flush/0, remove_Title/2]).
+-export([twitterator/2, python_start/1, flush/0, remove_Title/2]).
 
 %% Get a tweet from the server, put it in a list and send to next function.
 twitterator(MovieTitle, Binary) ->
@@ -13,7 +13,7 @@ twitterator(MovieTitle, Binary) ->
 	python_start(remove_Title(Title, NewList)).
 
 remove_Title([], List) -> List;
-remove_Title([H|T], List) ->erlang:display(H), remove_Title(T, lists:delete(H, List)).
+remove_Title([H|T], List) -> erlang:display(List), remove_Title(T, lists:delete(H, List)).
 
 %% Starts a python process that calculates the sentiment value of the tweet
 %% and returns it to the server.

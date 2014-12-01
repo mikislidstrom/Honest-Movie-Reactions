@@ -184,6 +184,7 @@
 3wicked
 2woeful
 1worthless
+1worst
 4adorable
 3accepted
 3accomplish
