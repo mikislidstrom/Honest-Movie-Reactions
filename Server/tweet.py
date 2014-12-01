@@ -7,19 +7,30 @@
 #==========================================================================================
 
 # Import the modules needed to run the script
-from erlport.erlterms import Atom
+from erlport.erlterms import Atom, List
 from erlport.erlang import set_message_handler, cast
 
 def register_tweet(dest):
     def tweet(message):
+        new_message = []
+        real_message = []
         lines = []
         x = ''
         value = 0
         value_list = []
+        title = message[:1]
+        new_message = message[1:]
+        new_title = title[0]
+        for item in new_message:
+            for n in item:
+                if new_title != n:
+                    real_message.append(n)
+                else:
+                    pass
         with open("sentiment.txt") as f:
             lines = f.readlines()
             lines = [wordval.strip() for wordval in lines]
-            for element in message:
+            for element in real_message:
                 x = ''.join(chr(x) for x in element).lower()
                 for wordval in lines:
                     word = wordval[1:]
