@@ -3,7 +3,7 @@
 
 twitter_search(Movie) ->
 	URL = "https://api.twitter.com/1.1/search/tweets.json",
-  Params = [{q, Movie}, {lang, en}],
+  Params = [{q, Movie ++ "%20-RT"}, {lang, en}],
 
   Api_key = "QtSP14USgvF4Zj9IKHy2I5bKN",
   Api_secret = "c7j35Y4vU7mw2K5vdm4oAwS6VLViLutd4ZcORCC8ByAJCBm1qV",
@@ -14,21 +14,17 @@ twitter_search(Movie) ->
   Token = Access_token,
   Secret = Access_token_secret,
 
-
-
-	ssl:start(),
-	application:start(inets),	
+	
   {ok, {{_, 200, _}, _, Body}} = oauth:get(URL, Params, Consumer, Token, Secret),
   parse(Body).
 
   parse(Body) ->
     {A} = jiffy:decode(Body),
-    [A1|B] = A,
-    {Header, A2} = A1,
-    [{A3}|B2] = A2,
+    [A1|_B] = A,
+    {_Header, A2} = A1,
+    [{_A3}|_B2] = A2,
 
-    List = [twitter_miner:unpack(X)||{X}<-A2],
-    List.
+    [twitter_miner:unpack(X)||{X}<-A2].
 
   unpack(List) ->
     {<<"id">>,  Id} = lists:keyfind(<<"id">>, 1, List),

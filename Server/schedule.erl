@@ -25,8 +25,8 @@ start({_Date, {12, 00, 00}}) ->
 %% Once every 5 minutes, call the server function to get tweets.
 start({_Date, {_, H, _}}) when H rem 5 == 0 ->
 	server:get_twitter_data(),
+	timer:sleep(63000),
 	CurrentTime = erlang:localtime(),
-	timer:sleep(61000),
 	start(CurrentTime);
 
 %% When nothing above matches, call self on new time.

@@ -9,6 +9,8 @@
 -define(SERVER, ?MODULE).
 
 start_link() ->
+	ssl:start(),
+	application:start(inets),
 	gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 
@@ -66,6 +68,8 @@ handle_cast(Message, State) ->
 handle_info(_M, _N) -> ok.
 
 handle_call(terminate, _From, State) ->
+	application:stop(inets),
+	ssl:stop(),
 	{stop, normal, ok, State}.
 
 terminate(normal, _State) ->

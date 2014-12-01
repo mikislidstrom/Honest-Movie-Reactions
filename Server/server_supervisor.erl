@@ -21,9 +21,6 @@ init([]) ->
 	Shutdown = 1000,
 	Type = worker,
 
-	WebServer = {web_server, {web_server, start, []},
-		Restart, Shutdown, Type, [web_server]},
-
 %% Server worker
 	Server = {server, {server, start_link, []},
 		Restart, Shutdown, Type, [server]},
