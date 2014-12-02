@@ -32,7 +32,35 @@ function updatePage() {
         });
 }
 
+function updateStatPage() {
+
+$.cookie.json = true;
+
+    var movie1 = $.cookie('movieJSON');
+    $("#title").text(movie1.title);
+    $("#vote_average").text("Average vote: " + movie1.vote_average);
+    $("#imagePoster").attr("src", "https://image.tmdb.org/t/p/w500" + movie1.poster_path);
+    $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie1.backdrop_path +')');
+    var jsonArr = [{'Budget':movie1.budget, 'Revenue':movie1.revenue}];
+
+    chart1.load({    
+        json: jsonArr,
+        keys: {
+            value: ['Budget', 'Revenue']
+        },
+        columns: [
+            ['Opening Weekend', 10000000],
+        ],
+        colors: {
+        Budget: '#ffa500',
+        'Opening Weekend': '#468499',
+        Revenue: '#0099cc',
+        }
+        });
+}
+
 function random() {
+
     $.ajax({
         url: "http://localhost:8081/erl/web_server:movie_ids",
         async: false,
@@ -54,6 +82,7 @@ function random() {
         dataType: 'json',
         success: function(data) {
             movieJSON = data;
+        $.cookie('movieJSON', movieJSON);
         }
     });
     updatePage();   
@@ -95,7 +124,9 @@ function search() {
 }
 
 function init() {
-    
+
+$.cookie.json = true; 
+
     $.ajax({
         url: "http://localhost:8081/erl/web_server:movie_titles",
         async: false,

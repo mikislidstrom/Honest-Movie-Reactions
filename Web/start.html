@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
-	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	<script src="c3-0.3.0/c3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script src="c3-0.3.0/c3.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="jquery-cookie/src/jquery.cookie.js"></script>
     <script src="movie.js"></script>
     
 </head>
 
 <body onload='init()'>
 
-	<div id="main">
-		<div id="poster">
-            <img id="imagePoster">
+    <div id="main">
+        <div id="poster">
+    <a href="statistics.html" target="statistics">
+            <img id="imagePoster"></a>
             <a href="statistics.html" target="statistics">View Full Statistics</a>
-		</div>
-		<div id="center">
+        </div>
+        <div id="center">
             <div id="search">        
                     <input type="text" id="search_term" />
                     <button onclick="search()">Search</button>
@@ -68,4 +70,3 @@
 <script src="charts.js"></script>
 </body>
 </html>
-

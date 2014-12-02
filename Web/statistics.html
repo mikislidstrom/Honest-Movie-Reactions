@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="style.css">
-	<link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
-	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="http://d3js.org/d3.js"></script>
-    <script src="d3-cloud/d3.layout.cloud.js"></script>
-	<script src="c3-0.3.0/c3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <!--<script src="http://d3js.org/d3.js"></script>
+    <script src="d3-cloud/d3.layout.cloud.js"></script><-->
+    <script src="c3-0.3.0/c3.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="jquery-cookie/src/jquery.cookie.js"></script>
     <script src="movie.js"></script>
     
 </head>
 
-<body onload='updatePage()'>
-		<div id="center">
+<body onload='updateStatPage()'>
+        <div id="center">
             <div id="search">        
                     <input type="text" id="search_term" />
                     <button onclick="search()">Search</button>
