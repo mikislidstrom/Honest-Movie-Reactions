@@ -2,6 +2,7 @@ var movieJSON;
 var titles;
 var id = "101";
 var keys;
+var statistics;
 
 function updatePage() {
     $("#title").text(movieJSON.title);
@@ -12,22 +13,18 @@ function updatePage() {
     $("#runtime").text("Runtime: " + movieJSON.runtime + " min");
     $("#homepage").html('<a href="' + movieJSON.homepage + '">' + movieJSON.homepage + '</a>');
     $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
-    $("#imagePoster").attr("src", "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path);
+    $("#imagePoster").attr({"src": "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path, "title":movieJSON.title});
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
-    var jsonArr = [{'Budget':movieJSON.budget, 'Revenue':movieJSON.revenue}];
+    var jsonArr = [{'Budget':movieJSON.budget, 'Total Revenue':movieJSON.revenue}];
 
     chart1.load({    
         json: jsonArr,
         keys: {
-            value: ['Budget', 'Revenue']
+            value: ['Budget', 'Total Revenue']
         },
-        columns: [
-            ['Opening Weekend', 10000000],
-        ],
         colors: {
-        Budget: '#ffa500',
-        'Opening Weekend': '#468499',
-        Revenue: '#0099cc',
+        'Budget': '#ffa500',
+        'Total Revenue': '#0099cc',
         }
         });
 }
@@ -36,11 +33,20 @@ function updateStatPage() {
 
 $.cookie.json = true;
 
-    var movie1 = $.cookie('movieJSON');
-    $("#title").text(movie1.title);
+    var movie1 = $.cookie('movie1');
+    var movie2 = $.cookie('movie2');
+    var movie3 = $.cookie('movie3');
+    var movie4 = $.cookie('movie4');
+    var movie5 = $.cookie('movie5');
+
     $("#vote_average").text("Average vote: " + movie1.vote_average);
-    $("#imagePoster").attr("src", "https://image.tmdb.org/t/p/w500" + movie1.poster_path);
+
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie1.backdrop_path +')');
+    $("#imagePoster1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie1.poster_path, "title":movie1.title});
+    $("#imagePoster2").attr({"src": "https://image.tmdb.org/t/p/w500" + movie2.poster_path, "title":movie2.title});
+    $("#imagePoster3").attr({"src": "https://image.tmdb.org/t/p/w500" + movie3.poster_path, "title":movie3.title});
+    $("#imagePoster4").attr({"src": "https://image.tmdb.org/t/p/w500" + movie4.poster_path, "title":movie4.title});
+    $("#imagePoster5").attr({"src": "https://image.tmdb.org/t/p/w500" + movie5.poster_path, "title":movie5.title});
     var jsonArr = [{'Budget':movie1.budget, 'Revenue':movie1.revenue}];
 
     chart1.load({    
@@ -53,13 +59,14 @@ $.cookie.json = true;
         ],
         colors: {
         Budget: '#ffa500',
-        'Opening Weekend': '#468499',
-        Revenue: '#0099cc',
+        Revenue: '#006400',
         }
         });
 }
 
 function random() {
+
+ 
 
     $.ajax({
         url: "http://localhost:8081/erl/web_server:movie_ids",
@@ -82,13 +89,15 @@ function random() {
         dataType: 'json',
         success: function(data) {
             movieJSON = data;
-        $.cookie('movieJSON', movieJSON);
+        $.cookie.json = true;
+            $.cookie('movieJSONcurr', movieJSON);
         }
     });
     updatePage();   
 }
 
 function search() {
+
     var term = $("#search_term").val().toLowerCase();
     if (term != "") {
         var keys = Object.keys(titles);
@@ -116,6 +125,8 @@ function search() {
                 dataType: 'json',
                 success: function(data) {
                     movieJSON = data;
+                $.cookie.json = true;
+                    $.cookie('movieJSONcurr', movieJSON);
                 }  
             });
             updatePage();
@@ -124,8 +135,6 @@ function search() {
 }
 
 function init() {
-
-$.cookie.json = true; 
 
     $.ajax({
         url: "http://localhost:8081/erl/web_server:movie_titles",
@@ -137,5 +146,40 @@ $.cookie.json = true;
     });
 
     random();
+
+};
+
+function initStatPage() {
+
+    $.cookie.json = true;
+        $.cookie('movie1', $.cookie('movieJSONcurr'));
+    statistics = window.open("statistics.html","statistics");
+    statistics.updateStatPage();
+
+};
+
+function add() {
+
+$.cookie.json = true;
+
+if($.cookie('movie2') == undefined) {
+$.cookie('movie2', $.cookie('movieJSONcurr'));
+statistics.updateStatPage();
+}
+
+else if($.cookie('movie3') == undefined) {
+$.cookie('movie3', $.cookie('movieJSONcurr'));
+statistics.updateStatPage();
+}
+
+else if($.cookie('movie4') == undefined) {
+$.cookie('movie4', $.cookie('movieJSONcurr'));
+statistics.updateStatPage();
+}
+
+else {
+$.cookie('movie5', $.cookie('movieJSONcurr'));
+statistics.updateStatPage();
+}   
 
 };

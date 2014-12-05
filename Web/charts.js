@@ -1,20 +1,18 @@
 var chart1 = c3.generate({
-   bindto: '#chart1',
-   size: {
-    height: 230,
-    width: 230
-},
+    bindto: '#chart1',
+    size: {
+        height: 170,
+        width: 170
+    },
 data: {
         columns: [
             ['Budget', 30000000],
-            ['Opening Weekend', 10000000],
-            ['Revenue', 50000000],
+            ['Total Revenue', 50000000],
         ],
     type : 'donut',
-        colors: {
-        Budget: '#ffa500',
-        'Opening Weekend': '#468499',
-        Revenue: '#0099cc',
+    colors: {
+        'Budget': '#ffa500',
+        'Total Revenue': '#0099cc',
     },
     onclick: function (d, i) { console.log("onclick", d, i); },
     onmouseover: function (d, i) { console.log("onmouseover", d, i); },
@@ -34,38 +32,27 @@ tooltip: {
 });
 
 var chart2 = c3.generate({
-   bindto: '#chart2',
-   size: {
-    height: 240,
-    width: 240
-},
+    bindto: '#chart2',
+    size: {
+        height: 170,
+        width: 170
+    },
 data: {
-    columns: [
-    ['Amazing', 152],
-    ['Great', 106],
-    ['Good', 96],
-    ['Not too bad', 76],
-    ['Bad', 60],
-    ['Shitty', 50],
-    ],
+        columns: [
+            ['This Movie', 52],
+            ['All Movies', 106],
+        ],
     type : 'donut',
     colors: {
-        Amazing: '#009900',
-        Great: '#00cc00',
-        Good: '#00ff00',
-        'Not too bad': '#99ff00',
-        Bad: '#990000',
-        Shitty: '#663300',
+        'This Movie': '#326ada',
+        'All Movies': '#a19c9c',
     },
     onclick: function (d, i) { console.log("onclick", d, i); },
     onmouseover: function (d, i) { console.log("onmouseover", d, i); },
     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
 },
- padding: {
-        top: 20,
-    },
 donut: {
-    title: "Tweets"
+        title: "Tweets"
 },
 tooltip: {
     format: {
@@ -76,54 +63,40 @@ tooltip: {
 }
 });
 
-d3.select('#chart2 svg').append('text')
-    .attr('x', d3.select('#chart2 svg').node().getBoundingClientRect().width / 2)
-    .attr('y', 16)
-    .attr('text-anchor', 'middle')
-    .style('font-size', '1.9em')
-    .text('Tweet Analysis');
-
 var chart3 = c3.generate({
-   bindto: '#chart3',
-   size: {
-    height: 220,
-    width: 220
-},
+    bindto: '#chart3',
 data: {
-    columns: [
-    ['This Movie', 52],
-    ['Other Movies', 106],
-    ],
-    type : 'donut',
-    colors: {
-        'This Movie': '#31698a',
-        'Other Movies': '#c0c0c0',
-    },
-    onclick: function (d, i) { console.log("onclick", d, i); },
-    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+        columns: [
+            ['Sentiment Score', 76]
+        ],
+        type: 'gauge',
+        onclick: function (d, i) { console.log("onclick", d, i); },
+        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
 },
- padding: {
-        top: 20,
-    },
-donut: {
-    title: "Tweets"
+gauge: {
+        width: 30 
 },
-tooltip: {
-    format: {
-        value: function (value, id) {
-            return value+" tweets";
-        }
-    }
+color: {
+    pattern: ['#663300', '#b42722', '#F97600', '#F6C600', '#a0b422', '#60b044', '#4c8b36', '#009a00'], // the three color levels for the percentage values.
+    threshold: {
+    values: [15, 30, 45, 60, 75, 90, 100]
 }
+},
+    size: {
+        width: 130
+    },
+    padding: {
+        bottom: 50,
+    }
 });
 
 d3.select('#chart3 svg').append('text')
     .attr('x', d3.select('#chart3 svg').node().getBoundingClientRect().width / 2)
-    .attr('y', 16)
+    .attr('y', 125)
     .attr('text-anchor', 'middle')
-    .style('font-size', '1.9em')
-    .text('Movie-related tweets this month');
+    .style('font-size', '1.3em')
+    .text('Sentiment Score');
 
 var chart4 = c3.generate({
     bindto: '#chart4',

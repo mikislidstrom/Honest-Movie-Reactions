@@ -1,72 +1,125 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
-    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="c3-0.3.0/c3.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="d3/d3.min.js" charset="utf-8"></script>
     <script src="c3-0.3.0/c3.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="jquery-cookie/src/jquery.cookie.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="movie.js"></script>
     
 </head>
 
 <body onload='init()'>
 
-    <div id="main">
-        <div id="poster">
-    <a href="statistics.html" target="statistics">
-            <img id="imagePoster"></a>
-            <a href="statistics.html" target="statistics">View Full Statistics</a>
-        </div>
-        <div id="center">
+<div class="container">
+
+<div class="row">
+
+    <div class="col-sm-3">
+    </div>
+
+    <div class="col-sm-6">
             <div id="search">        
                     <input type="text" id="search_term" />
-                    <button onclick="search()">Search</button>
-                    <button onclick="random()">Random</button>
+                    <button class="searchBtn" onclick="search()">Search</button>
+                    <button class="searchBtn" onclick="random()">Random</button>
             </div>
-            <div class="textSection" id="movie_info">
-                <h3 id="title"><div id="vote_average"><div id="vote_average_t">(Avg. Vote)</div></div></h3>
+    </div>
+
+    <div class="col-sm-3">
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-3">
+
+        <div id="poster">
+            <img id="imagePoster">
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="textSection" id="local_refs">
+                    <a onclick="initStatPage()" href="javascript:void(0);">View Full Statistics</a>
+                    <br>
+                    <a onclick="add()" href="javascript:void(0);">Add to Compare</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-sm-6">
+
+        <div class="textSection" id="movie_info">
+                <h3 id="title"></h3>
                 <p id="tagline"></p>
                 <p id="overview"></p>
                 <P id="release_date"></p>
                 <p id="runtime"></p>
                 <p id="homepage"></p>
                 <p id="imdb"></p>
+        </div>
+
+        <div class="row diagram" id="diagram1">
+
+            <div class="col-sm-4">
+                <div id="chart1"></div>
+            </div>
+
+            <div class="col-sm-4">
+                <div id="chart2"></div>
+            </div>
+
+            <div class="col-sm-4">
+                <div id="chart3"></div>
+            </div>
+
+        </div>
+            
+    </div>
+
+    <div class="col-sm-3">
+
+        <div class="textSection" id="twitter_stream">
+             <div class="tweet">
+                <p class="tweet_title">@jadajada...</p>
+                <p class="tweet_txt">Tweet...</p>
+            </div>
+            <div class="tweet">
+                <p class="tweet_title">@twinkey</p>
+                <p class="tweet_txt">Kewl!!!! #hashtag</p>
+            </div>
+            <div class="tweet">
+                <p class="tweet_title">@jadajada...</p>
+                <p class="tweet_txt">Tweet...</p>
+            </div>
+            <div class="tweet">
+                <p class="tweet_title">@jadajada...</p>
+                <p class="tweet_txt">Tweet...</p>
+            </div>
+            <div class="tweet">
+                <p class="tweet_title">@jadajada...</p>
+                <p class="tweet_txt">Tweet...</p>
             </div>
         </div>
-        <div class="textSection" id="twitter_stream">
-         <div class="tweet">
-            <p class="tweet_title">@jadajada...</p>
-            <p class="tweet_txt">Tweet...</p>
-        </div>
-        <div class="tweet">
-            <p class="tweet_title">@twinkey</p>
-            <p class="tweet_txt">Kewl!!!! #hashtag</p>
-        </div>
-        <div class="tweet">
-            <p class="tweet_title">@jadajada...</p>
-            <p class="tweet_txt">Tweet...</p>
-        </div>
-        <div class="tweet">
-            <p class="tweet_title">@jadajada...</p>
-            <p class="tweet_txt">Tweet...</p>
-        </div>
-        <div class="tweet">
-            <p class="tweet_title">@jadajada...</p>
-            <p class="tweet_txt">Tweet...</p>
-        </div>
-    </div>
-    <div class="diagram" id="diagram1">
-        <div id="chart1"></div>
-        <div id="chart3"></div>
-        <div id="chart2"></div>
-    </div>
-    <div class="diagram" id="diagram2">
-        <div id="chart4"></div>
+
     </div>
 
 </div>
+
+</div>
+
 <script src="charts.js"></script>
+
 </body>
 </html>
+
