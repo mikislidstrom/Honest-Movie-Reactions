@@ -1,7 +1,7 @@
 -module(movies).
 -export([releases_day/1, releases_today/0, id/1, url/1, string_date/0, id_list/1, popular/1]).
 
--define(API_KEY, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXx").
+-define(API_KEY, "90387aadff905aa5771e9aeb14ab9e3d").
 
 
 %% Gets a list of movies released on inputed date
@@ -45,7 +45,12 @@ id(Id) ->
 	inets:start(),
 	ssl:start(),
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
-	Body.
+	{PropList} = jiffy:decode(Body),
+	Imdb_rating = [{<<"imdb_rating">>, get_rating:imdb(binary_to_list(proplists:get_value(<<"imdb_id">>,PropList)))}],
+	Critics_rating = [{<<"critics_rating">>, get_rating:rotten_tomatoes(binary_to_list(proplists:get_value(<<"imdb_id">>,PropList)))}],
+	Sentiment_rating = [{<<"sentiment_rating">>, 0}],
+	binary_to_list(jiffy:encode({PropList ++ Imdb_rating ++ Critics_rating ++ Sentiment_rating})).
+
 
 %% Get the JSON data for entered URL
 url(Url) ->
