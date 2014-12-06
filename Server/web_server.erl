@@ -1,5 +1,5 @@
 -module(web_server).
--export([start/0, movies/3, movie_ids/3, tweets/3, stop/1]).
+-export([start/0, movies/3, movie_ids/3, tweets/3, stop/1, movie_titles/3]).
 
 %%% Basic web server for serving JSON data from the database to a web page
 %%% URL localhost:8081/erl/web_server:function
