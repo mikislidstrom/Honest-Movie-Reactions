@@ -1,8 +1,6 @@
 body {
 	background-size: 100%;
 	font-family: 'Open Sans', sans-serif;
-	zoom: 0.9;
-	-moz-transform: scale(0.9);
 }
 
 #search {
@@ -92,7 +90,6 @@ body {
 }
 
 #diagram1 {
-	padding-right: 5%;
 	margin-left: 0%;
 	margin-right: 0%;
 	margin-bottom: 3%;
@@ -107,7 +104,6 @@ body {
 
 #chart2 {
 	float: center;
-	margin-left: -10%;
 	display: inline-block;
 	height: auto;
 	width:100%;
@@ -115,8 +111,9 @@ body {
 
 #chart3 {
 	float: right;
+	padding-top: 10%;
 	display: inline-block;
-	height: auto;
+	height: 100%;
 	width:100%;
 }
 
@@ -282,14 +279,3 @@ visibility: hidden;
 	float: right
 
 }
-
-
-
-
-
-
-
-
-
-
-

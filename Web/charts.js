@@ -65,6 +65,9 @@ tooltip: {
 
 var chart3 = c3.generate({
     bindto: '#chart3',
+        size: {
+        height: 170,
+    },
 data: {
         columns: [
             ['Sentiment Score', 76]
@@ -83,12 +86,6 @@ color: {
     values: [15, 30, 45, 60, 75, 90, 100]
 }
 },
-    size: {
-        width: 130
-    },
-    padding: {
-        bottom: 50,
-    }
 });
 
 d3.select('#chart3 svg').append('text')
