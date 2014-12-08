@@ -17,6 +17,8 @@ function updatePage() {
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
     var jsonArr = [{'Budget':movieJSON.budget, 'Total Revenue':movieJSON.revenue}];
 
+    setTweetTags();
+
     chart1.load({    
         json: jsonArr,
         keys: {
@@ -93,6 +95,8 @@ function random() {
             $.cookie('movieJSONcurr', movieJSON);
         }
     });
+
+    getTweets(movieJSON.id);
     updatePage();   
 }
 
@@ -129,6 +133,8 @@ function search() {
                     $.cookie('movieJSONcurr', movieJSON);
                 }  
             });
+
+            getTweets(movieJSON.id);
             updatePage();
         };
     };
