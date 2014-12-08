@@ -1,7 +1,7 @@
 -module(db_handler).
 -export([put/3, get/2, buckets/0, keys/1, keys_json/1, delete/2, cal_keys/1]).
 
--define(PORT, 8087).
+-define(PORT, 10017).
 -define(HOST, "127.0.0.1").
 
 %%% Module works as a wrapper for the riak-erlang-client 

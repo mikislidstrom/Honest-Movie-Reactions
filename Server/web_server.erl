@@ -1,5 +1,5 @@
 -module(web_server).
--export([start/0, movies/3, movie_ids/3, tweets/3, stop/1, movie_titles/3]).
+-export([start/0, movies/3, movie_ids/3, tweets/3, stop/1, movie_titles/3, create_movie_json/1]).
 
 %%% Basic web server for serving JSON data from the database to a web page
 %%% URL localhost:8081/erl/web_server:function
@@ -45,7 +45,7 @@ movies(SessionID, Env, _Input) ->
 	Query = proplists:get_value(query_string, Env),
 	mod_esi:deliver(SessionID, [
 		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
-		db_handler:get("Movies", Query)
+		create_movie_json(Query)
 		]).
 
 %% Serves the ids of all the movies in db as a JSON array
@@ -72,3 +72,8 @@ movie_titles(SessionID, _Env, _Input) ->
 		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
 		jiffy:encode({mapred:titles()})
 		]).
+
+create_movie_json(MovieId) ->
+	{MovieJSON} = jiffy:decode(db_handler:get("Movies", MovieId)),
+	{MovieStats} = jiffy:decode(db_handler:get("Stats", MovieId)),
+	jiffy:encode({MovieJSON ++ MovieStats}).

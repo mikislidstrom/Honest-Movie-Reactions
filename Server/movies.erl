@@ -1,5 +1,6 @@
 -module(movies).
 -export([releases_day/1, releases_today/0, id/1, url/1, string_date/0, id_list/1, popular/1]).
+-export([rotten_tomatoes/1, imdb/1]).
 
 -define(API_KEY, "90387aadff905aa5771e9aeb14ab9e3d").
 
@@ -19,6 +20,20 @@ releases_day(Date) ->
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
 	{[_Page, {_Result,MovieList}, _TotalPages, _TotalResult]}=jiffy:decode(Body),
 	MovieList.
+
+rotten_tomatoes(Imdb_Id) ->
+	Api_Key = "?apikey=nuyfaesekthcgc45fd7umc4j",
+	Url = "http://api.rottentomatoes.com/api/public/v1.0/movie_alias.json" ++ Api_Key ++ "&type=imdb&id=" ++ string:sub_string(Imdb_Id,3),
+	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
+	{PropList} = jiffy:decode(Body),
+	{RatingsList} = proplists:get_value(<<"ratings">>, PropList),
+	proplists:get_value(<<"critics_score">>, RatingsList).
+
+imdb(Imdb_Id) ->
+	Url = "http://www.omdbapi.com/?plot=short&r=json&i=" ++ Imdb_Id,
+	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
+	{PropList} = jiffy:decode(Body),
+	binary_to_float(proplists:get_value(<<"imdbRating">>, PropList)) * 10.
 
 %% Gets a list of movies released the current day
 releases_today() ->
@@ -46,10 +61,9 @@ id(Id) ->
 	ssl:start(),
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
 	{PropList} = jiffy:decode(Body),
-	Imdb_rating = [{<<"imdb_rating">>, get_rating:imdb(binary_to_list(proplists:get_value(<<"imdb_id">>,PropList)))}],
-	Critics_rating = [{<<"critics_rating">>, get_rating:rotten_tomatoes(binary_to_list(proplists:get_value(<<"imdb_id">>,PropList)))}],
-	Sentiment_rating = [{<<"sentiment_rating">>, 0}],
-	binary_to_list(jiffy:encode({PropList ++ Imdb_rating ++ Critics_rating ++ Sentiment_rating})).
+	Imdb_rating = [{<<"imdb_rating">>, imdb(binary_to_list(proplists:get_value(<<"imdb_id">>,PropList)))}],
+	Critics_rating = [{<<"critics_rating">>, rotten_tomatoes(binary_to_list(proplists:get_value(<<"imdb_id">>,PropList)))}],
+	binary_to_list(jiffy:encode({PropList ++ Imdb_rating ++ Critics_rating})).
 
 
 %% Get the JSON data for entered URL
