@@ -7,7 +7,7 @@
 
 %% starts the supervisor and the Schedule.
 start_link() ->
-	supervisor:start_link({local, ?MODULE}, ?MODULE, []),
+	supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 
 init([]) -> 
