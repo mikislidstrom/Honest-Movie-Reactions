@@ -28,7 +28,7 @@ get_movie_data() ->
 %% Gets movie title and id from database.
 get_twitter_data() -> 
 	erlang:display("pulling twitter data"),
-	get_twitter_data(test_db:id_title_list()).
+	get_twitter_data(db_integration:id_title_list()).
 
 %% Updates statistics.
 update_statistics() ->
@@ -45,7 +45,7 @@ get_twitter_data([H | T]) ->
 %% calls the test:db function to get newly released movies.
 handle_cast(get_movies, State) -> 
 	spawn(fun() -> 
-		test_db:store_releases() end),
+		db_integration:store_releases() end),
 	{noreply, State};
 
 %% spawns a new process.
@@ -55,7 +55,7 @@ handle_cast(get_movies, State) ->
 handle_cast({get_tweets, {MovieId, Title}}, State) ->
 	spawn(fun() -> 
 		Tweets = twitter_miner:twitter_search(Title),
-	[test_db:store_tweet(integer_to_list(MovieId), integer_to_list(TwitterId), jiffy:encode({[{<<"movie_id">>, MovieId}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name}, {<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Title, Text)}]}))
+	[db_integration:store_tweet(integer_to_list(MovieId), integer_to_list(TwitterId), jiffy:encode({[{<<"movie_id">>, MovieId}, {<<"created_at">>, Date}, {<<"screen_name">>, Screen_Name}, {<<"text">>, Text}, {<<"rating">>, tweet:twitterator(Title, Text)}]}))
 	|| {TwitterId, Date, Screen_Name, Text} <- Tweets, tweet:twitterator(Title, Text) > 0] end),
 	{noreply, State};
 
