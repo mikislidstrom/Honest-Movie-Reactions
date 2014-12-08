@@ -176,9 +176,9 @@ load_stats() ->
 	%Time = Start - Stop,
 
 load_movie_stats(Key) ->
-	SumTweets = {<<"sum_tweets">>, sum_tweets()},
-	SumTweetsMovie = {<<"sum_movie_tweets">>, length(db_handler:keys(Key))},
-	SentimentRating = {<<"sentiment">>, mapred:sentiment_average(Key)},
+	SumTweets = {<<"totalTweets">>, sum_tweets()},
+	SumTweetsMovie = {<<"movieTweets">>, length(db_handler:keys(Key))},
+	SentimentRating = {<<"sentiment_rating">>, mapred:sentiment_average(Key)},
 	WordCloud = {<<"wordcloud">>, {mapred:wordcount(Key)}},
 	TweetsDay = {<<"tweets_per_day">>, {mapred:tweets_day(Key)}},
 	SentimentDay = {<<"sentiment_per_day">>, {mapred:sentiment_day(Key)}},
