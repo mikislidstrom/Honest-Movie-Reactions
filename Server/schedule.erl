@@ -15,17 +15,17 @@ start({_Date, {12, 00, 00}}) ->
 	timer:sleep(1000),
 	start(CurrentTime);
 
-%% Once every hour, call the server function to update statistics.
-%%start({_Date, {_, 00, 00}}) ->
-%%	server:update_statistics(),
-%%	CurrentTime = erlang:localtime(),
-%%	timer:sleep(1000),
-%%	start(CurrentTime);
+%% Once every 6 min, call the server function to update statistics.
+start({_Date, {_, H, 00}}) when H rem 6 == 0 ->
+	server:update_statistics(),
+	timer:sleep(61000),
+	CurrentTime = erlang:localtime(),
+	start(CurrentTime);
 
 %% Once every 5 minutes, call the server function to get tweets.
 start({_Date, {_, H, _}}) when H rem 5 == 0 ->
 	server:get_twitter_data(),
-	timer:sleep(63000),
+	timer:sleep(61000),
 	CurrentTime = erlang:localtime(),
 	start(CurrentTime);
 

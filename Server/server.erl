@@ -30,10 +30,6 @@ get_twitter_data() ->
 	erlang:display("pulling twitter data"),
 	get_twitter_data(db_integration:id_title_list()).
 
-%% Updates statistics.
-update_statistics() ->
-	ok.
-
 %% gen_server:cast to get tweets for every movie title in the database.
 get_twitter_data([]) -> ok;
 get_twitter_data([H | T]) ->
@@ -42,11 +38,21 @@ get_twitter_data([H | T]) ->
 	gen_server:cast(server, {get_tweets, H}),
 	get_twitter_data(T).
 
+%% Updates statistics.
+update_statistics() ->
+	erlang:display("updating statistics"),
+	gen_server:cast(server, update_stats).
+
 %% calls the test:db function to get newly released movies.
 handle_cast(get_movies, State) -> 
 	spawn(fun() -> 
 		db_integration:store_releases() end),
 	{noreply, State};
+
+handle_cast(update_stats, State) -> 
+	spawn(fun() -> 
+		mapred:load_stats() end),
+		{noreply, State};
 
 %% spawns a new process.
 %% calls twitter miner to get tweets based on the movie title, returns a list of tweets.
