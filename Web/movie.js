@@ -3,6 +3,7 @@ var titles;
 var id = "101";
 var keys;
 var statistics;
+var highlightedMovie;
 
 function updatePage() {
 
@@ -45,6 +46,8 @@ $.cookie.json = true;
     $("#vote_average").text("Average vote: " + movie1.vote_average);
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie1.backdrop_path +')');
     $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie1.poster_path, "title":movie1.title});
+    highlightedMovie = "thumbnail1";
+    document.getElementById(highlightedMovie).style.border = "5px inset black";
 
     var jsonArr = [{'Budget':movie1.budget, 'Total Revenue':movie1.revenue}];
 
@@ -59,6 +62,37 @@ $.cookie.json = true;
         }
         });
 
+    $('.thumbnail').mouseover(function(event) {
+        switch (event.which) {
+            default:
+                document.getElementById(highlightedMovie).style.border = "none";
+                document.getElementById(this.id).style.border = "5px inset black";
+                break;
+           }
+    });
+
+    $('.thumbnail').mouseout(function(event) {
+        switch (event.which) {
+            default:
+                document.getElementById(this.id).style.border = "none";
+                document.getElementById(highlightedMovie).style.border = "5px inset black";
+                break;
+           }
+    });
+
+    $('.thumbnail').mousedown(function(event) {
+        switch (event.which) {
+            case 1:
+                document.getElementById(highlightedMovie).style.border = "none";
+                document.getElementById(this.id).style.border = "5px inset black";
+                highlightedMovie = this.id;
+                break;
+            case 3:
+                remove();
+                break;
+        }
+    });
+
     $("#thumbnail2").attr({"src": "https://image.tmdb.org/t/p/w500" + movie2.poster_path, "title":movie2.title});
     document.getElementById("thumbnail2").style.visibility = "visible";
     $("#thumbnail3").attr({"src": "https://image.tmdb.org/t/p/w500" + movie3.poster_path, "title":movie3.title});
@@ -67,11 +101,10 @@ $.cookie.json = true;
     document.getElementById("thumbnail4").style.visibility = "visible";
     $("#thumbnail5").attr({"src": "https://image.tmdb.org/t/p/w500" + movie5.poster_path, "title":movie5.title});
     document.getElementById("thumbnail5").style.visibility = "visible";
+
 }
 
-function random() {
-
- 
+function random() { 
 
     $.ajax({
         url: "http://localhost:8081/erl/web_server:movie_ids",

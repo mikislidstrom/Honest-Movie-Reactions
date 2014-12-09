@@ -165,10 +165,6 @@ body {
 	box-shadow: 10px 10px 10px #000000;
 }
 
-#thumbnail1:hover{
-	border: 5px inset black;
-}
-
 #thumbnail2 {
 	opacity: 0.8;
 	background-color: #ffffff;
@@ -179,10 +175,6 @@ body {
 	display: inline;
 	box-shadow: 10px 10px 10px #000000;
 	visibility: hidden;
-}
-
-#thumbnail2:hover{
-	border: 5px inset black;
 }
 
 #thumbnail3 {
@@ -197,10 +189,6 @@ body {
 	visibility: hidden;
 }
 
-#thumbnail3:hover{
-	border: 5px inset black;
-}
-
 #thumbnail4 {
 	opacity: 0.8;
 	background-color: #ffffff;
@@ -211,10 +199,6 @@ body {
 	display: inline;
 	box-shadow: 10px 10px 10px #000000;
 	visibility: hidden;
-}
-
-#thumbnail4:hover{
-	border: 5px inset black;
 }
 
 #thumbnail5 {
@@ -229,64 +213,5 @@ body {
 	visibility: hidden;
 }
 
-#thumbnail5:hover{
-	border: 5px inset black;
-}
 
 
-
-#imagePoster3 {
-	margin: 10%;
-	height: auto;
-	width:80%;
-	box-shadow: 10px 10px 10px #000000;
-	border-radius: 10px;
-}
-
-#imagePoster3:hover {
-	border: 5px inset black;
-}
-
-#imagePoster4 {
-	margin: 10%;
-	height: auto;o
-	width:80%;
-	box-shadow: 10px 10px 10px #000000;
-	border-radius: 10px;
-}
-
-#imagePoster4:hover {
-	border: 5px inset black;
-}
-
-#imagePoster5 {
-	margin: 10%;
-	height: auto;
-	width:80%;
-	box-shadow: 10px 10px 10px #000000;
-	border-radius: 10px;
-}
-
-#imagePoster5:hover {
-	border: 5px inset black;
-}
-
-
-#rem1 {
-    position: absolute;
-    top: 7%;
-    right: 15%;
-	float: right;
-visibility: hidden;
-}
-
-#rem1:hover {
-    visibility: visible;
-}
-
-.close_b {
-	height: auto;
-	width:30%;
-	float: right
-
-}
