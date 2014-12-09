@@ -189,7 +189,7 @@ function init() {
 
     random();
 
-};
+}
 
 function initStatPage() {
 
@@ -198,7 +198,7 @@ function initStatPage() {
     statistics = window.open("statistics.html","statistics");
     statistics.updateStatPage();
 
-};
+}
 
 function add() {
 
