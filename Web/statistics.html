@@ -3,58 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <link href="c3-0.3.0/c3.css" rel="stylesheet" type="text/css">
-    <script src="d3/d3.v3.min.js" charset="utf-8"></script>
-    <script src="d3/d3.js"></script>
-    <script src="d3-cloud/d3.layout.cloud.js"></script>
+    <link rel="stylesheet" type="text/css" href="c3-0.3.0/c3.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="d3/d3.min.js" charset="utf-8"></script>
     <script src="c3-0.3.0/c3.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="jquery-cookie/src/jquery.cookie.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="movie.js"></script>
     
 </head>
 
 <body onload='updateStatPage()'>
-        <div id="center">
+
+<div class="container-fluid">
+
+<div class="row">
+
+    <div class="col-sm-6 col-sm-offset-3">
             <div id="search">        
                     <input type="text" id="search_term" />
-                    <button onclick="search()">Search</button>
-                    <button onclick="random()">Random</button>
+                    <button class="searchBtn" onclick="search()">Search</button>
+                    <button class="searchBtn" onclick="random()">Random</button>
+            </div>
+    </div>
+
+    <div class="col-sm-3">
+
+        <div class="col-sm-2">
+            <img class="thumbnail" id="thumbnail1">
+        </div>
+
+        <div class="col-sm-2">
+            
+        </div>
+        
+        <div class="col-sm-2">
+            
+        </div>
+
+        <div class="col-sm-2">
+            
+        </div>
+        
+        <div class="col-sm-2">
+            
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-sm-4">
+
+        <div class="row diagram" id="diagram2">
+
+            <div id="chart4"></div>
+
+        </div>
+
+        <div class="row diagram" id="diagram2">
+
+            <div id="chart5"></div>
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-5">
+
+        <div class="row diagram" id="diagram1">
+
+                <div class="col-sm-4">
+                    <div id="chart1"></div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div id="chart2"></div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div id="chart3"></div>
+                </div>
+
+        </div>
+
+        <div class="row diagram" id="diagram1">
+            <div class="col-sm-12">
+                <div id="chart6"></div>
             </div>
         </div>
 
-    <div class="diagram" id="diagram3">
-        <div id="chart5"></div>  
-    </div>
-
-    <div class="diagram" id="diagram1">
-        <div id="chart1"></div>
-        <div id="chart3"></div>
-        <div id="chart2"></div>
-    </div>
-
-    <div class="diagram" id="diagram2">
-        <div id="chart4"></div>
-    </div>
-
-    <div class="diagram" id="diagram4">
-        <div id="chart6"></div>  
-    </div>
-
-     <div class="diagram" id="diagram5">
-        <div id="chart7"></div>
-    </div>
-        <!--<div class="diagram" id="thumbnails">
-                <img id="imagePoster1">
-        <div class="thumbnail" id="rem1">
-        <a onclick="remove(movie1)" href="javascript:void(0);">
-            <img class="close_b" id="close_b1" src="https://cdn3.iconfinder.com/data/icons/musthave/128/Remove.png" /></a>                  
+        <div class="row diagram" id="diagram1">
+            <div class="col-sm-12">
+                <div id="chart7"></div>
+            </div>
         </div>
-   
-    </div><-->
+            
+    </div>
+
+    <div class="col-sm-3">
+
+    </div>
+
+</div>
+
+</div>
 
 <script src="charts.js"></script>
+
 </body>
 </html>
+

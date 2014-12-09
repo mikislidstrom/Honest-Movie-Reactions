@@ -4,7 +4,7 @@ var chart1 = c3.generate({
         height: 170,
         width: 170
     },
-data: {
+    data: {
         columns: [
             ['Budget', 30000000],
             ['Total Revenue', 50000000],
@@ -17,18 +17,20 @@ data: {
     onclick: function (d, i) { console.log("onclick", d, i); },
     onmouseover: function (d, i) { console.log("onmouseover", d, i); },
     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-},
-donut: {
-    title: "Box Office"
-},
-tooltip: {
-    format: {
-        value: function (value, id) {
+    },
+    donut: {
+    title: "Box Office",
+            width: 10
+    },
+    tooltip: {
+        format: {
+        value: function (value, defaultValueFormat) {
             var format = d3.format('$');
-            return format(value);
+            var percentage = d3.format('%,');
+            return format(value)+" ("+percentage(defaultValueFormat)+")";
+            }
         }
     }
-}
 });
 
 var chart2 = c3.generate({
@@ -37,7 +39,7 @@ var chart2 = c3.generate({
         height: 170,
         width: 170
     },
-data: {
+    data: {
         columns: [
             ['This Movie', 52],
             ['All Movies', 106],
@@ -50,17 +52,19 @@ data: {
     onclick: function (d, i) { console.log("onclick", d, i); },
     onmouseover: function (d, i) { console.log("onmouseover", d, i); },
     onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-},
-donut: {
-        title: "Tweets"
-},
-tooltip: {
-    format: {
-        value: function (value, id) {
-            return value+" tweets";
+    },
+    donut: {
+        title: "Tweets",
+        width: 10
+    },
+    tooltip: {
+        format: {
+        value: function (value, defaultValueFormat) {
+            var percentage = d3.format('%,');
+            return value+" Tweets "+"("+percentage(defaultValueFormat)+")";
+            }   
         }
     }
-}
 });
 
 var chart3 = c3.generate({
@@ -68,7 +72,7 @@ var chart3 = c3.generate({
         size: {
         height: 170,
     },
-data: {
+    data: {
         columns: [
             ['Sentiment Score', 76]
         ],
@@ -76,16 +80,16 @@ data: {
         onclick: function (d, i) { console.log("onclick", d, i); },
         onmouseover: function (d, i) { console.log("onmouseover", d, i); },
         onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-},
-gauge: {
+        },
+    gauge: {
         width: 30 
-},
-color: {
+    },
+    color: {
     pattern: ['#663300', '#b42722', '#F97600', '#F6C600', '#a0b422', '#60b044', '#4c8b36', '#009a00'], // the three color levels for the percentage values.
     threshold: {
     values: [15, 30, 45, 60, 75, 90, 100]
-}
-},
+            }
+    },
 });
 
 d3.select('#chart3 svg').append('text')
@@ -97,90 +101,77 @@ d3.select('#chart3 svg').append('text')
 
 var chart4 = c3.generate({
     bindto: '#chart4',
-       size: {
-    height: 240
-},
+        size: {
+        height: 263,
+    },
     data: {
         columns: [
-            ['Amazing', 30, 200, 100, 400, 150, 250, 90],
-            ['Great', 45, 20, 10, 40, 150, 300, 100],
-            ['Good', 12, 100, 100, 40, 85, 90, 80],
-            ['Not too bad', 60, 70, 110, 500, 200, 200, 190],
-            ['Bad', 50, 20, 50, 40, 75, 100, 120],
-            ['Shitty', 20, 20, 65, 40, 50, 25, 15]
+            ['Movie 1', 30, 120],
+            ['Movie 2', 130, 300],
+            ['Movie 3', 130, 300],
+            ['Movie 4', 130, 300],
+            ['Movie 5', 130, 300],
         ],
-            colors: {
-        Amazing: '#009900',
-        Great: '#00cc00',
-        Good: '#00ff00',
-        'Not too bad': '#99ff00',
-        Bad: '#990000',
-        Shitty: '#663300',
+        type: 'bar',
+        colors: {
+        'Movie 1': '#ee4035',
+        'Movie 2': '#f37736',
+        'Movie 3': '#ecb939',
+        'Movie 4': '#7bc043',
+        'Movie 5': '#0392cf',
+        },
     },
-    },
-    axis: {
+        axis: {
+
+        y : {
+            tick: {
+                format: d3.format("$,")
+                }
+            },
+
         x: {
             type: 'category',
-            categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            categories: ['Budget', 'Total Revenue']
         }
+
     },
+    bar: {
+        width: {
+            ratio: 0.8
+        }
+    }
 });
 
 d3.select('#chart4 svg').append('text')
     .attr('x', d3.select('#chart4 svg').node().getBoundingClientRect().width / 2)
     .attr('y', 16)
     .attr('text-anchor', 'middle')
-    .style('font-size', '1.9em')
-    .text('Last Week - Tweet Sentiment Analysis');
-
+    .style('font-size', '1.3em')
+    .text('Box Office (In Millions $)');
 
 var chart5 = c3.generate({
     bindto: '#chart5',
+        size: {
+        height: 263,
+    },
     data: {
         columns: [
-            ['Movie1', 30, 200, 100],
-            ['Movie2', 130, 100, 140]
+            ['Movie 1', 0.30, 0.70, 0.60, 0.87],
+            ['Movie 2', 0.13, 0.10, 0.40, 0.67],
+            ['Movie 3', 0.13, 0.10, 0.40, 0.23],
+            ['Movie 4', 0.13, 0.10, 0.40, 0.56],
+            ['Movie 5', 0.13, 0.10, 0.40, 0.08]
         ],
-        type: 'bar'
+        type: 'bar',
+        colors: {
+        'Movie 1': '#ee4035',
+        'Movie 2': '#f37736',
+        'Movie 3': '#ecb939',
+        'Movie 4': '#7bc043',
+        'Movie 5': '#0392cf',
+        },
     },
-        axis: {
-        y : {
-            tick: {
-                format: function (d) { return "$" + d + "M"; }
-                }
-            },
-        x: {
-            type: 'category',
-            categories: ['Budget', 'Opening Weekend', 'Revenue']
-        }
-    },
-    bar: {
-        width: {
-            ratio: 0.5 // this makes bar width 50% of length between ticks
-        }
-        // or
-        //width: 100 // this makes bar width 100px
-    }
-});
-
-d3.select('#chart5 svg').append('text')
-    .attr('x', d3.select('#chart5 svg').node().getBoundingClientRect().width / 2)
-    .attr('y', 16)
-    .attr('text-anchor', 'middle')
-    .style('font-size', '1.9em')
-    .text('Box Office');
-
-var chart6 = c3.generate({
-    bindto: '#chart6',
-    data: {
-        columns: [
-            ['Movie1', 0.79, 0.72, 0.76, 0.82],
-            ['Movie2', 0.67, 0.62, 0.56, 0.69],
-        ],
-        type: 'bar'
-    },
-        axis: {
-            rotated: true,
+            axis: {
 
         y : {
             tick: {
@@ -190,60 +181,115 @@ var chart6 = c3.generate({
 
         x: {
             type: 'category',
-            categories: ['MoSCoW', 'The Movie Database', 'Rotten Tomatoes', 'IMDb']
+            categories: ['MoSCoW', 'The Movie Database', 'OMDb', 'Rotten Tomatoes']
         }
 
     },
     bar: {
         width: {
-            ratio: 0.5 // this makes bar width 50% of length between ticks
+            ratio: 0.8
         }
-        // or
-        //width: 100 // this makes bar width 100px
     }
+});
+
+d3.select('#chart5 svg').append('text')
+    .attr('x', d3.select('#chart5 svg').node().getBoundingClientRect().width / 2)
+    .attr('y', 16)
+    .attr('text-anchor', 'middle')
+    .style('font-size', '1.3em')
+    .text('Ratings');
+
+var chart6 = c3.generate({
+    bindto: '#chart6',
+        size: {
+        height: 170,
+    },
+    data: {
+        columns: [
+            ['Movie 1', 30, 200, 100, 400, 150, 250, 90],
+            ['Movie 2', 45, 20, 10, 40, 150, 300, 100],
+            ['Movie 3', 12, 100, 100, 40, 85, 90, 80],
+            ['Movie 4', 60, 70, 110, 500, 200, 200, 190],
+            ['Movie 5', 50, 20, 50, 40, 75, 100, 120]
+        ],
+        colors: {
+        'Movie 1': '#ee4035',
+        'Movie 2': '#f37736',
+        'Movie 3': '#ecb939',
+        'Movie 4': '#7bc043',
+        'Movie 5': '#0392cf',
+        },
+    },
+    axis: {
+        x: {
+            label: {
+                text: 'Day of the week',
+                position: 'outer-center' 
+            },
+            type: 'category',
+            categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        },
+        y: {
+            label: {
+                text: 'Overall Score',
+                position: 'outer-middle' 
+            },
+        }
+    },
 });
 
 d3.select('#chart6 svg').append('text')
     .attr('x', d3.select('#chart6 svg').node().getBoundingClientRect().width / 2)
-    .attr('y', 16)
+    .attr('y', 12)
     .attr('text-anchor', 'middle')
-    .style('font-size', '1.9em')
-    .text('Ratings');
+    .style('font-size', '1.3em')
+    .text('Last Week - Tweet Sentiment Analysis');
 
 var chart7 = c3.generate({
     bindto: '#chart7',
-       size: {
-    height: 240
-},
+        size: {
+        height: 170,
+    },
     data: {
         columns: [
-            ['Movie1', 30, 200, 100, 130, 150, 250, 90],
-            ['Movie2', 45, 20, 10, 40, 150, 300, 100],
+            ['Movie 1', 30, 200, 100, 400, 150, 250, 90],
+            ['Movie 2', 45, 20, 10, 40, 150, 300, 100],
+            ['Movie 3', 12, 100, 100, 40, 85, 90, 80],
+            ['Movie 4', 60, 70, 110, 500, 200, 200, 190],
+            ['Movie 5', 50, 20, 50, 40, 75, 100, 120]
         ],
-            colors: {
-        Amazing: '#009900',
-        Great: '#00cc00',
-        Good: '#00ff00',
-        'Not too bad': '#99ff00',
-        Bad: '#990000',
-        Shitty: '#663300',
-    },
+        colors: {
+        'Movie 1': '#ee4035',
+        'Movie 2': '#f37736',
+        'Movie 3': '#ecb939',
+        'Movie 4': '#7bc043',
+        'Movie 5': '#0392cf',
+        },
     },
     axis: {
         x: {
+            label: {
+                text: 'Day of the week',
+                position: 'outer-center' 
+            },
             type: 'category',
             categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        },
+        y: {
+            label: {
+                text: 'Amount of tweets',
+                position: 'outer-middle' 
+            },
         }
     },
 });
 
 d3.select('#chart7 svg').append('text')
     .attr('x', d3.select('#chart7 svg').node().getBoundingClientRect().width / 2)
-    .attr('y', 16)
+    .attr('y', 12)
     .attr('text-anchor', 'middle')
-    .style('font-size', '1.9em')
+    .style('font-size', '1.3em')
     .text('Last Week - Amount of Tweets');
-    
 
     
 
