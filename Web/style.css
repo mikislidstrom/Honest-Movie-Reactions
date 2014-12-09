@@ -141,6 +141,12 @@ body {
 	margin-right: 0%;
 }
 
+#diagram3 {
+	margin-bottom: 6%;
+	margin-left: 0%;
+	margin-right: 0%;
+}
+
 #chart4 {
 	float: center;
 	display: inline-block;
@@ -148,45 +154,86 @@ body {
 	width:100%;
 }
 
-.thumbnail {
-	height: auto;
-	width: 10%;
-}
-
-#thumbnails {
-	margin-left: auto;
-    	margin-right: auto;
-    	margin-bottom: 1%;
-	width: 10%;
-	height: 10%;
-}
-
-#imagePoster1 {
-	margin: 10%;
-	float: center;
-	height: auto;
-	width:70%;
-	box-shadow: 10px 10px 10px #000000;
+#thumbnail1 {
+	opacity: 0.8;
+	background-color: #ffffff;
 	border-radius: 10px;
-	border: 5px outset black;
-}
-
-#imagePoster1:hover ~ #rem1 {
-    visibility: visible;
-}
-
-#imagePoster2 {
-	margin: 10%;
-	float: center;
 	height: auto;
-	width:70%;
+	width: 20%;
+	float: left;
+	display: inline;
 	box-shadow: 10px 10px 10px #000000;
-	border-radius: 10px;
 }
 
-#imagePoster2:hover {
+#thumbnail1:hover{
 	border: 5px inset black;
 }
+
+#thumbnail2 {
+	opacity: 0.8;
+	background-color: #ffffff;
+	border-radius: 10px;
+	height: auto;
+	width: 20%;
+	float: left;
+	display: inline;
+	box-shadow: 10px 10px 10px #000000;
+	visibility: hidden;
+}
+
+#thumbnail2:hover{
+	border: 5px inset black;
+}
+
+#thumbnail3 {
+	opacity: 0.8;
+	background-color: #ffffff;
+	border-radius: 10px;
+	height: auto;
+	width: 20%;
+	float: left;
+	display: inline;
+	box-shadow: 10px 10px 10px #000000;
+	visibility: hidden;
+}
+
+#thumbnail3:hover{
+	border: 5px inset black;
+}
+
+#thumbnail4 {
+	opacity: 0.8;
+	background-color: #ffffff;
+	border-radius: 10px;
+	height: auto;
+	width: 20%;
+	float: left;
+	display: inline;
+	box-shadow: 10px 10px 10px #000000;
+	visibility: hidden;
+}
+
+#thumbnail4:hover{
+	border: 5px inset black;
+}
+
+#thumbnail5 {
+	opacity: 0.8;
+	background-color: #ffffff;
+	border-radius: 10px;
+	height: auto;
+	width: 20%;
+	float: left;
+	display: inline;
+	box-shadow: 10px 10px 10px #000000;
+	visibility: hidden;
+}
+
+#thumbnail5:hover{
+	border: 5px inset black;
+}
+
+
 
 #imagePoster3 {
 	margin: 10%;
@@ -202,7 +249,7 @@ body {
 
 #imagePoster4 {
 	margin: 10%;
-	height: auto;
+	height: auto;o
 	width:80%;
 	box-shadow: 10px 10px 10px #000000;
 	border-radius: 10px;
@@ -224,9 +271,6 @@ body {
 	border: 5px inset black;
 }
 
-#thumbnails {
-	position: relative;
-}
 
 #rem1 {
     position: absolute;

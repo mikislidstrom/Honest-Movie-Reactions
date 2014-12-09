@@ -5,6 +5,7 @@ var keys;
 var statistics;
 
 function updatePage() {
+
     $("#title").text(movieJSON.title);
     $("#tagline").text(movieJSON.tagline);
     $("#overview").text(movieJSON.overview);
@@ -42,28 +43,30 @@ $.cookie.json = true;
     var movie5 = $.cookie('movie5');
 
     $("#vote_average").text("Average vote: " + movie1.vote_average);
-
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie1.backdrop_path +')');
-    $("#imagePoster1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie1.poster_path, "title":movie1.title});
-    $("#imagePoster2").attr({"src": "https://image.tmdb.org/t/p/w500" + movie2.poster_path, "title":movie2.title});
-    $("#imagePoster3").attr({"src": "https://image.tmdb.org/t/p/w500" + movie3.poster_path, "title":movie3.title});
-    $("#imagePoster4").attr({"src": "https://image.tmdb.org/t/p/w500" + movie4.poster_path, "title":movie4.title});
-    $("#imagePoster5").attr({"src": "https://image.tmdb.org/t/p/w500" + movie5.poster_path, "title":movie5.title});
-    var jsonArr = [{'Budget':movie1.budget, 'Revenue':movie1.revenue}];
+    $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie1.poster_path, "title":movie1.title});
+
+    var jsonArr = [{'Budget':movie1.budget, 'Total Revenue':movie1.revenue}];
 
     chart1.load({    
         json: jsonArr,
         keys: {
-            value: ['Budget', 'Revenue']
+            value: ['Budget', 'Total Revenue']
         },
-        columns: [
-            ['Opening Weekend', 10000000],
-        ],
         colors: {
-        Budget: '#ffa500',
-        Revenue: '#006400',
+        'Budget': '#ffa500',
+        'Total Revenue': '#0099cc',
         }
         });
+
+    $("#thumbnail2").attr({"src": "https://image.tmdb.org/t/p/w500" + movie2.poster_path, "title":movie2.title});
+    document.getElementById("thumbnail2").style.visibility = "visible";
+    $("#thumbnail3").attr({"src": "https://image.tmdb.org/t/p/w500" + movie3.poster_path, "title":movie3.title});
+    document.getElementById("thumbnail3").style.visibility = "visible";
+    $("#thumbnail4").attr({"src": "https://image.tmdb.org/t/p/w500" + movie4.poster_path, "title":movie4.title});
+    document.getElementById("thumbnail4").style.visibility = "visible";
+    $("#thumbnail5").attr({"src": "https://image.tmdb.org/t/p/w500" + movie5.poster_path, "title":movie5.title});
+    document.getElementById("thumbnail5").style.visibility = "visible";
 }
 
 function random() {
