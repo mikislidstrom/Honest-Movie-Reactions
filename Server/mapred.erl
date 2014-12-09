@@ -5,6 +5,8 @@
 
 % Path to sentiment.txt
 -define(FILE_PATH, "/home/nizzon/Prog/Erlang/Project/Server/sentiment.txt").
+-define(PORT, 10017).
+-define(HOST, "127.0.0.1").
 
 sum_tweets() ->
 	Movies = db_handler:keys("Movies"),
@@ -15,7 +17,7 @@ wordcount(Bucket) ->
 	{ok, File} = file:open(?FILE_PATH, read),
 	Keys = read(File),
 	file:close(File),
-	{ok, Pid} = riakc_pb_socket:start_link("127.0.0.1", 10017),
+	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
 		Pid,
 		list_to_binary(Bucket),
@@ -50,7 +52,7 @@ red_count_words(Input, _) ->
 
 %% Get the average sentiment value for tweets per day in a list for a movie
 sentiment_day(Bucket) ->
-	{ok, Pid} = riakc_pb_socket:start_link("127.0.0.1", 10017),
+	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
 		Pid,
 		list_to_binary(Bucket),
@@ -86,7 +88,7 @@ red_sentiment_day(Input, _) ->
 
 %% Titles list
 titles() ->
-	{ok, Pid} = riakc_pb_socket:start_link("127.0.0.1", 10017),
+	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
 		Pid,
 		<<"Movies">>,
@@ -102,7 +104,7 @@ titles() ->
 
 %% Get the average sentiments value for all tweets for a movie
 sentiment_average(Bucket) ->
-	{ok, Pid} = riakc_pb_socket:start_link("127.0.0.1", 10017),
+	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
 		Pid,
 		list_to_binary(Bucket),
@@ -119,7 +121,7 @@ sentiment_average(Bucket) ->
 
 %% Gets the amount of tweets per day for a movie
 tweets_day(Bucket) ->
-	{ok, Pid} = riakc_pb_socket:start_link("127.0.0.1", 10017),
+	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
 		Pid,
 		list_to_binary(Bucket),
@@ -161,7 +163,6 @@ month_num(Day) ->
 
 %% Read line by line of text file
 read(File) ->
-    %{ok, File} = file:open("/home/nizzon/Prog/Erlang/Project/Server/sentiment.txt", read),
     case file:read_line(File) of
         {ok, [_|Data]} -> [lists:sublist(Data, length(Data) -1) | read(File)];
         eof        -> []
