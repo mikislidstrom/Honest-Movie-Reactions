@@ -33,7 +33,11 @@ imdb(Imdb_Id) ->
 	Url = "http://www.omdbapi.com/?plot=short&r=json&i=" ++ Imdb_Id,
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
 	{PropList} = jiffy:decode(Body),
-	binary_to_float(proplists:get_value(<<"imdbRating">>, PropList)) * 10.
+	R = proplists:get_value(<<"imdbRating">>, PropList),
+	case R of
+		<<"N/A">> -> R;
+		_ -> binary_to_float(R) * 10
+	end.
 
 %% Gets a list of movies released the current day
 releases_today() ->
