@@ -75,5 +75,10 @@ movie_titles(SessionID, _Env, _Input) ->
 
 create_movie_json(MovieId) ->
 	{MovieJSON} = jiffy:decode(db_handler:get("Movies", MovieId)),
-	{MovieStats} = jiffy:decode(db_handler:get("Stats", MovieId)),
+	{[TotalTweets, MovieTweets, SentimentRating, WordCloud, {TweetsDayKey, {TweetsDay}}, {SentimentDayKey, {SentimentDay}}]} = jiffy:decode(db_handler:get("Stats", MovieId)),
+	NewSentimentDay = {SentimentDayKey, {lists:sublist(lists:reverse(lists:keysort(1, SentimentDay)), 7)}},
+	NewTweetsDay = {TweetsDayKey, {lists:sublist(lists:reverse(lists:keysort(1, TweetsDay)), 7)}},
+	MovieStats = [TotalTweets, MovieTweets, SentimentRating, WordCloud, NewTweetsDay, NewSentimentDay],
+
 	jiffy:encode({MovieJSON ++ MovieStats}).
+
