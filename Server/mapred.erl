@@ -105,19 +105,23 @@ titles() ->
 %% Get the average sentiments value for all tweets for a movie
 sentiment_average(Bucket) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
-	{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
-		Pid,
-		list_to_binary(Bucket),
-		[
-			{map, {qfun, fun(O,_,_) ->
-				{PropList} = jiffy:decode(riak_object:get_value(O)),
-				[proplists:get_value(<<"rating">>, PropList)]
-			end}, none, true}
-		]
-	),
-	riakc_pb_socket:stop(Pid),
-	P = math:pow(10, 2),
-    round((lists:sum(Result) / length(Result)) * 20 * P) / P.
+	case lists:member(list_to_binary(Bucket), db_handler:buckets()) of
+		true ->
+			{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
+				Pid,
+				list_to_binary(Bucket),
+				[
+					{map, {qfun, fun(O,_,_) ->
+						{PropList} = jiffy:decode(riak_object:get_value(O)),
+						[proplists:get_value(<<"rating">>, PropList)]
+					end}, none, true}
+				]
+			),
+			riakc_pb_socket:stop(Pid),
+			P = math:pow(10, 2),
+    		round((lists:sum(Result) / length(Result)) * 20 * P) / P;
+    	false -> 0
+    end.
 
 %% Gets the amount of tweets per day for a movie
 tweets_day(Bucket) ->
