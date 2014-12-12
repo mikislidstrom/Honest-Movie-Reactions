@@ -4,7 +4,7 @@ var id = "101";
 var keys;
 var statistics;
 var highlightedMovie;
-var jsonArr;
+var json_Chart1;
 
 function updatePage() {
 
@@ -18,12 +18,15 @@ function updatePage() {
     $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
     $("#imagePoster").attr({"src": "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path, "title":movieJSON.title});
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
-    var jsonArr = [{'Budget':movieJSON.budget, 'Total Revenue':movieJSON.revenue}];
+    var json_Chart1 = [{'Budget':movieJSON.budget, 'Total Revenue':movieJSON.revenue}];
+    var json_Chart2 = [{'This Movie':movieJSON.movieTweets, 'All Movies':movieJSON.totalTweets}];
+    var json_Chart3 = [{'Sentiment Score':movieJSON.sentiment_rating}];
+ 
 
     setTweetTags();
 
     chart1.load({    
-        json: jsonArr,
+        json: json_Chart1,
         keys: {
             value: ['Budget', 'Total Revenue']
         },
@@ -31,6 +34,24 @@ function updatePage() {
         'Budget': '#ffa500',
         'Total Revenue': '#0099cc',
         }
+        });
+
+    chart2.load({    
+        json: json_Chart2,
+        keys: {
+            value: ['This Movie', 'All Movies']
+        },
+        colors: {
+        'This Movie': '#326ada',
+        'All Movies': '#a19c9c',
+        }
+        });
+
+    chart3.load({    
+        json: json_Chart3,
+        keys: {
+            value: ['Sentiment Score']
+        },
         });
 
     if($.cookie('tutorial1') == undefined) {
@@ -58,10 +79,12 @@ $.cookie.json = true;
 
     document.getElementById(highlightedMovie).style.border = "5px inset black";
 
-    jsonArr = [{'Budget':movie[0].budget, 'Total Revenue':movie[0].revenue}];
+    json_Chart1 = [{'Budget':movie[0].budget, 'Total Revenue':movie[0].revenue}];
+    json_Chart2 = [{'This Movie':movie[0].movieTweets, 'All Movies':movie[0].totalTweets}];
+    json_Chart3 = [{'Sentiment Score':movie[0].sentiment_rating}];
 
     chart1.load({    
-        json: jsonArr,
+        json: json_Chart1,
         keys: {
             value: ['Budget', 'Total Revenue']
         },
@@ -69,7 +92,25 @@ $.cookie.json = true;
         'Budget': '#ffa500',
         'Total Revenue': '#0099cc',
         }
-        })
+        });
+
+    chart2.load({    
+        json: json_Chart2,
+        keys: {
+            value: ['This Movie', 'All Movies']
+        },
+        colors: {
+        'This Movie': '#326ada',
+        'All Movies': '#a19c9c',
+        }
+        });
+
+    chart3.load({    
+        json: json_Chart3,
+        keys: {
+            value: ['Sentiment Score']
+        },
+        });
 
     if($.cookie('tutorial2') == undefined) {
     alert("On this page you can view more detailed statistics about a movie.\nYou may stack up to 5 movies on this page and compare their statistics against each other.\n\nThe movies you have selected to compare are displayed as thumbnails:\nHOVER a thumbnail to see the movie title.\nLEFT-CLICK a thumbnail to highlight a particular movie (this will also load it on the start page).\nRIGHT-CLICK a thumbnail to remove a particular movie from comparison.")
@@ -108,10 +149,12 @@ $.cookie.json = true;
                 var movie = [$.cookie('movie1'), $.cookie('movie2'), $.cookie('movie3'), $.cookie('movie4'), $.cookie('movie5')];
                 $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[number-1].backdrop_path +')');
 
-                jsonArr = [{'Budget':movie[number-1].budget, 'Total Revenue':movie[number-1].revenue}];
+                json_Chart1 = [{'Budget':movie[number-1].budget, 'Total Revenue':movie[number-1].revenue}];
+                json_Chart2 = [{'This Movie':movie[number-1].movieTweets, 'All Movies':movie[number-1].totalTweets}];
+                json_Chart3 = [{'Sentiment Score':movie[number-1].sentiment_rating}];
 
                 chart1.load({    
-                    json: jsonArr,
+                    json: json_Chart1,
                     keys: {
                         value: ['Budget', 'Total Revenue']
                     },
@@ -119,6 +162,24 @@ $.cookie.json = true;
                     'Budget': '#ffa500',
                     'Total Revenue': '#0099cc',
                     }
+                    });
+
+                chart2.load({    
+                    json: json_Chart2,
+                    keys: {
+                        value: ['This Movie', 'All Movies']
+                    },
+                    colors: {
+                    'This Movie': '#326ada',
+                    'All Movies': '#a19c9c',
+                    }
+                    });
+
+                chart3.load({    
+                    json: json_Chart3,
+                    keys: {
+                        value: ['Sentiment Score']
+                    },
                     });
 
                 break;
