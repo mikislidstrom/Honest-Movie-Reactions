@@ -1,5 +1,5 @@
 -module(web_server).
--export([start/0, movies/3, movie_ids/3, tweets/3, stop/1, movie_titles/3, create_movie_json/1]).
+-export([start/0, movies/3, movie_ids/3, tweets/3, stop/1, movie_titles/3, create_movie_json/1, wordcloud/3]).
 
 %%% Basic web server for serving JSON data from the database to a web page
 %%% URL localhost:8081/erl/web_server:function
@@ -67,6 +67,14 @@ tweets(SessionID, Env, _Input) ->
 		twitter:get_tweets(MovieId)
 		]).
 
+wordcloud(SessionID, Env, _Input) ->
+	Query = proplists:get_value(query_string, Env),
+	{[_, _, _, WordCloud, _, _]} = jiffy:decode(db_handler:get("Stats", Query)),
+	mod_esi:deliver(SessionID, [
+		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
+		jiffy:encode({[WordCloud]})
+		]).
+
 movie_titles(SessionID, _Env, _Input) ->
 	mod_esi:deliver(SessionID, [
 		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
@@ -75,12 +83,10 @@ movie_titles(SessionID, _Env, _Input) ->
 
 create_movie_json(MovieId) ->
 	{MovieJSON} = jiffy:decode(db_handler:get("Movies", MovieId)),
-	{[TotalTweets, MovieTweets, SentimentRating, {WordCloudKey, {WordCloud}}, {TweetsDayKey, {TweetsDay}}, {SentimentDayKey, {SentimentDay}}]} = jiffy:decode(db_handler:get("Stats", MovieId)),
+	{[TotalTweets, MovieTweets, SentimentRating, _, {TweetsDayKey, {TweetsDay}}, {SentimentDayKey, {SentimentDay}}]} = jiffy:decode(db_handler:get("Stats", MovieId)),
 	NewSentimentDay = {SentimentDayKey, {lists:sublist(lists:reverse(lists:keysort(1, SentimentDay)), 7)}},
 	NewTweetsDay = {TweetsDayKey, {lists:sublist(lists:reverse(lists:keysort(1, TweetsDay)), 7)}},
-	NewWordCloud = {WordCloudKey, lists:concat([lists:duplicate(proplists:get_value(Key, WordCloud), Key) || Key <- proplists:get_keys(WordCloud)])},
-	MovieStats = [TotalTweets, MovieTweets, SentimentRating, NewTweetsDay, NewSentimentDay, NewWordCloud],
+	%NewWordCloud = {WordCloudKey, lists:concat([lists:duplicate(proplists:get_value(Key, WordCloud), Key) || Key <- proplists:get_keys(WordCloud)])},
+	MovieStats = [TotalTweets, MovieTweets, SentimentRating, NewTweetsDay, NewSentimentDay],
 
 	jiffy:encode({MovieJSON ++ MovieStats}).
-
-
