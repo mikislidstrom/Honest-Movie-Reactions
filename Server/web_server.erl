@@ -84,9 +84,30 @@ movie_titles(SessionID, _Env, _Input) ->
 create_movie_json(MovieId) ->
 	{MovieJSON} = jiffy:decode(db_handler:get("Movies", MovieId)),
 	{[TotalTweets, MovieTweets, SentimentRating, _, {TweetsDayKey, {TweetsDay}}, {SentimentDayKey, {SentimentDay}}]} = jiffy:decode(db_handler:get("Stats", MovieId)),
-	NewSentimentDay = {SentimentDayKey, {lists:sublist(lists:reverse(lists:keysort(1, SentimentDay)), 7)}},
-	NewTweetsDay = {TweetsDayKey, {lists:sublist(lists:reverse(lists:keysort(1, TweetsDay)), 7)}},
+	NewSentimentDay = {SentimentDayKey, {[value(X, SentimentDay)||X<-days(7)]}},
+	NewTweetsDay = {TweetsDayKey, {[value(X, TweetsDay)||X<-days(7)]}},
+	%NewSentimentDay = {SentimentDayKey, {lists:sublist(lists:reverse(lists:keysort(1, SentimentDay)), 7)}},
+	%NewTweetsDay = {TweetsDayKey, {lists:sublist(lists:reverse(lists:keysort(1, TweetsDay)), 7)}},
 	%NewWordCloud = {WordCloudKey, lists:concat([lists:duplicate(proplists:get_value(Key, WordCloud), Key) || Key <- proplists:get_keys(WordCloud)])},
 	MovieStats = [TotalTweets, MovieTweets, SentimentRating, NewTweetsDay, NewSentimentDay],
 
 	jiffy:encode({MovieJSON ++ MovieStats}).
+
+
+%% Helper functions to create the weekly stats for JSON
+
+% Creates a list of the last N dates
+days(N) when N > 0 -> 
+	[list_to_binary(convert_date(calendar:gregorian_days_to_date(calendar:date_to_gregorian_days(erlang:date()) - N)))| days(N-1)];
+days(_) -> [].
+
+% Sets value to 0 if value is missing in proplist for input day
+value(Day, PropList) ->
+	case proplists:get_value(Day, PropList) of
+		undefined -> {Day, 0};
+		Value -> {Day, Value}
+	end. 
+
+% Converts the date to strinf format
+convert_date({Y,M,D}) when D < 10 -> integer_to_list(Y) ++ "-" ++ integer_to_list(M) ++ "-0" ++ integer_to_list(D);
+convert_date({Y,M,D}) -> integer_to_list(Y) ++ "-" ++ integer_to_list(M) ++ "-" ++ integer_to_list(D).
