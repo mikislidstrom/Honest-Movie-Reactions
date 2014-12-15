@@ -69,10 +69,11 @@ tweets(SessionID, Env, _Input) ->
 
 wordcloud(SessionID, Env, _Input) ->
 	Query = proplists:get_value(query_string, Env),
-	{[_, _, _, WordCloud, _, _]} = jiffy:decode(db_handler:get("Stats", Query)),
+	{[_, _, _, {_,{WordCloud}}, _, _]} = jiffy:decode(db_handler:get("Stats", Query)),
+	NewWordCloud=[{[{<<"text">>,Word},{<<"size">>,Size}]}||{Word, Size}<-WordCloud],
 	mod_esi:deliver(SessionID, [
 		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
-		jiffy:encode({[WordCloud]})
+		jiffy:encode(NewWordCloud)
 		]).
 
 movie_titles(SessionID, _Env, _Input) ->
