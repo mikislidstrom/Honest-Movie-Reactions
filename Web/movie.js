@@ -4,15 +4,12 @@ var id = "101";
 var keys;
 var statistics;
 var highlightedMovie;
-var json_Chart1;
 
 function updatePage() {
 
     $("#title").text(movieJSON.title);
     $("#tagline").text(movieJSON.tagline);
     $("#overview").text(movieJSON.overview);
-    $("#vote_average").text("Average vote: " + movieJSON.vote_average);
-    $("#release_date").text("Release date: " + movieJSON.release_date);
     $("#runtime").text("Runtime: " + movieJSON.runtime + " min");
     $("#homepage").html('<a href="' + movieJSON.homepage + '">' + movieJSON.homepage + '</a>');
     $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
@@ -69,7 +66,6 @@ $.cookie.json = true;
     
     var movie = [$.cookie('movie1'), $.cookie('movie2'), $.cookie('movie3'), $.cookie('movie4'), $.cookie('movie5')];
 
-    $("#vote_average").text("Average vote: " + movie[0].vote_average);
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[0].backdrop_path +')');
     $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[0].poster_path, "title":movie[0].title});
     
@@ -113,7 +109,7 @@ $.cookie.json = true;
         });
 
     if($.cookie('tutorial2') == undefined) {
-    alert("On this page you can view more detailed statistics about a movie.\nYou may stack up to 5 movies on this page and compare their statistics against each other.\n\nThe movies you have selected to compare are displayed as thumbnails:\nHOVER a thumbnail to see the movie title.\nLEFT-CLICK a thumbnail to highlight a particular movie (this will also load it on the start page).\nRIGHT-CLICK a thumbnail to remove a particular movie from comparison.")
+    alert("On this page you can view more detailed statistics about a movie.\nYou may stack up to 5 movies on this page and compare their statistics against each other.\n\nThe movies you have selected to compare are displayed as thumbnails:\nHOVER a thumbnail to see the movie title.\nLEFT-CLICK a thumbnail to highlight a particular movie (some statistics are displayed for this movie only and not compared).\nRIGHT-CLICK a thumbnail to remove a particular movie from comparison.")
     var date = new Date();
     var minutes = 15;
     date.setTime(date.getTime() + (minutes * 60 * 1000));
@@ -198,6 +194,9 @@ $.cookie.json = true;
                     $.cookie('movie'+number, $.cookie('movie'+(parseInt(number)+1).toString()));
                     $.removeCookie('movie2');
                     document.getElementById("thumbnail2").style.visibility = "hidden";
+                    chart4.unload({});
+                    chart5.unload({});
+                    location.reload();
                     updateStatPage();
                     break;
 
@@ -206,6 +205,9 @@ $.cookie.json = true;
                     $.cookie('movie'+(parseInt(number)+1).toString(), $.cookie('movie'+(parseInt(number)+2).toString()));
                     $.removeCookie('movie3');
                     document.getElementById("thumbnail3").style.visibility = "hidden";
+                    chart4.unload({});
+                    chart5.unload({});
+                    location.reload();
                     updateStatPage();
                     break;
 
@@ -215,6 +217,9 @@ $.cookie.json = true;
                     $.cookie('movie'+(parseInt(number)+2).toString(), $.cookie('movie'+(parseInt(number)+3).toString()));
                     $.removeCookie('movie4');
                     document.getElementById("thumbnail4").style.visibility = "hidden";
+                    chart4.unload({});
+                    chart5.unload({});
+                    location.reload();
                     updateStatPage();
                     break;
 
@@ -224,7 +229,10 @@ $.cookie.json = true;
                     $.cookie('movie'+(parseInt(number)+2).toString(), $.cookie('movie'+(parseInt(number)+3).toString()));
                     $.cookie('movie'+(parseInt(number)+3).toString(), $.cookie('movie'+(parseInt(number)+4).toString()));
                     $.removeCookie('movie5');
-                    document.getElementById("thumbnail5").style.visibility = "hidden";
+                    document.getElementById("thumbnail5").style.visibility = "hidden";                    
+                    chart4.unload({});
+                    chart5.unload({});
+                    location.reload();
                     updateStatPage();
                     break;
                 }
@@ -232,14 +240,207 @@ $.cookie.json = true;
         }
     })
 
+    chart4.load({
+        rows: [
+            [movie[0].title],
+            [movie[0].budget],
+            [movie[0].revenue],
+        ],
+        type: 'bar',
+    });
+
+    chart5.load({
+        rows: [
+            [movie[0].title],
+            [movie[0].sentiment_rating],
+            [movie[0].vote_average], 
+            [movie[0].imdb_rating],
+            [movie[0].critics_rating],
+        ],
+        type: 'bar',
+    });
+
+    chart6.load({
+        columns: [
+            ['x', Object.keys(movie[0].sentiment_per_day)[0], Object.keys(movie[0].sentiment_per_day)[1], Object.keys(movie[0].sentiment_per_day)[2], Object.keys(movie[0].sentiment_per_day)[3], Object.keys(movie[0].sentiment_per_day)[4], Object.keys(movie[0].sentiment_per_day)[5], Object.keys(movie[0].sentiment_per_day)[6]],
+            [movie[0].title, movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[0]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[1]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[2]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[3]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[4]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[5]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[6]]],
+        ]
+    });
+
+    chart7.load({
+        columns: [
+            ['x', Object.keys(movie[0].tweets_per_day)[0], Object.keys(movie[0].tweets_per_day)[1], Object.keys(movie[0].tweets_per_day)[2], Object.keys(movie[0].tweets_per_day)[3], Object.keys(movie[0].tweets_per_day)[4], Object.keys(movie[0].tweets_per_day)[5], Object.keys(movie[0].tweets_per_day)[6]],
+            [movie[0].title, movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[0]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[1]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[2]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[3]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[4]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[5]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[6]]],
+        ]
+    });
+
     $("#thumbnail2").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[1].poster_path, "title":movie[1].title});
     document.getElementById("thumbnail2").style.visibility = "visible";
+
+    chart4.load({
+        rows: [
+            [movie[0].title, movie[1].title],
+            [movie[0].budget, movie[1].budget],
+            [movie[0].revenue, movie[1].revenue],
+        ],
+        type: 'bar',
+    });
+
+    chart5.load({
+        rows: [
+            [movie[0].title, movie[1].title],
+            [movie[0].sentiment_rating, movie[1].sentiment_rating],
+            [movie[0].vote_average, movie[1].vote_average], 
+            [movie[0].imdb_rating, movie[1].imdb_rating],
+            [movie[0].critics_rating, movie[1].critics_rating],
+        ],
+        type: 'bar',
+    });
+
+    chart6.load({
+        columns: [
+            ['x', Object.keys(movie[0].sentiment_per_day)[0], Object.keys(movie[0].sentiment_per_day)[1], Object.keys(movie[0].sentiment_per_day)[2], Object.keys(movie[0].sentiment_per_day)[3], Object.keys(movie[0].sentiment_per_day)[4], Object.keys(movie[0].sentiment_per_day)[5], Object.keys(movie[0].sentiment_per_day)[6]],
+            [movie[0].title, movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[0]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[1]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[2]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[3]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[4]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[5]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[6]]],
+            [movie[1].title, movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[0]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[1]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[2]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[3]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[4]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[5]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[6]]],
+        ]
+    });
+
+    chart7.load({
+        columns: [
+            ['x', Object.keys(movie[0].tweets_per_day)[0], Object.keys(movie[0].tweets_per_day)[1], Object.keys(movie[0].tweets_per_day)[2], Object.keys(movie[0].tweets_per_day)[3], Object.keys(movie[0].tweets_per_day)[4], Object.keys(movie[0].tweets_per_day)[5], Object.keys(movie[0].tweets_per_day)[6]],
+            [movie[0].title, movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[0]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[1]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[2]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[3]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[4]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[5]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[6]]],
+            [movie[1].title, movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[0]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[1]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[2]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[3]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[4]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[5]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[6]]],
+        ]
+    });
+
     $("#thumbnail3").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[2].poster_path, "title":movie[2].title});
     document.getElementById("thumbnail3").style.visibility = "visible";
+
+    chart4.load({
+        rows: [
+            [movie[0].title, movie[1].title, movie[2].title],
+            [movie[0].budget, movie[1].budget, movie[2].budget],
+            [movie[0].revenue, movie[1].revenue, movie[2].revenue],
+        ],
+        type: 'bar',
+    });
+
+    chart5.load({
+        rows: [
+            [movie[0].title, movie[1].title, movie[2].title],
+            [movie[0].sentiment_rating, movie[1].sentiment_rating, movie[2].sentiment_rating],
+            [movie[0].vote_average, movie[1].vote_average, movie[2].vote_average], 
+            [movie[0].imdb_rating, movie[1].imdb_rating, movie[2].imdb_rating],
+            [movie[0].critics_rating, movie[1].critics_rating, movie[2].critics_rating],
+        ],
+        type: 'bar',
+    });
+
+    chart6.load({
+        columns: [
+            ['x', Object.keys(movie[0].sentiment_per_day)[0], Object.keys(movie[0].sentiment_per_day)[1], Object.keys(movie[0].sentiment_per_day)[2], Object.keys(movie[0].sentiment_per_day)[3], Object.keys(movie[0].sentiment_per_day)[4], Object.keys(movie[0].sentiment_per_day)[5], Object.keys(movie[0].sentiment_per_day)[6]],
+            [movie[0].title, movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[0]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[1]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[2]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[3]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[4]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[5]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[6]]],
+            [movie[1].title, movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[0]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[1]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[2]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[3]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[4]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[5]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[6]]],
+            [movie[2].title, movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[0]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[1]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[2]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[3]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[4]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[5]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[6]]],
+        ]
+    });
+
+    chart7.load({
+        columns: [
+            ['x', Object.keys(movie[0].tweets_per_day)[0], Object.keys(movie[0].tweets_per_day)[1], Object.keys(movie[0].tweets_per_day)[2], Object.keys(movie[0].tweets_per_day)[3], Object.keys(movie[0].tweets_per_day)[4], Object.keys(movie[0].tweets_per_day)[5], Object.keys(movie[0].tweets_per_day)[6]],
+            [movie[0].title, movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[0]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[1]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[2]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[3]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[4]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[5]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[6]]],
+            [movie[1].title, movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[0]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[1]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[2]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[3]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[4]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[5]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[6]]],
+            [movie[2].title, movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[0]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[1]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[2]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[3]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[4]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[5]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[6]]],
+        ]
+    });
+
     $("#thumbnail4").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[3].poster_path, "title":movie[3].title});
     document.getElementById("thumbnail4").style.visibility = "visible";
+
+    chart4.load({
+        rows: [
+            [movie[0].title, movie[1].title, movie[2].title, movie[3].title],
+            [movie[0].budget, movie[1].budget, movie[2].budget, movie[3].budget],
+            [movie[0].revenue, movie[1].revenue, movie[2].revenue, movie[3].revenue],
+        ],
+        type: 'bar',
+    });
+
+    chart5.load({
+        rows: [
+            [movie[0].title, movie[1].title, movie[2].title, movie[3].title],
+            [movie[0].sentiment_rating, movie[1].sentiment_rating, movie[2].sentiment_rating, movie[3].sentiment_rating],
+            [movie[0].vote_average, movie[1].vote_average, movie[2].vote_average, movie[3].vote_average], 
+            [movie[0].imdb_rating, movie[1].imdb_rating, movie[2].imdb_rating, movie[3].imdb_rating],
+            [movie[0].critics_rating, movie[1].critics_rating, movie[2].critics_rating, movie[3].critics_rating],
+        ],
+        type: 'bar',
+    });
+
+    chart6.load({
+        columns: [
+            ['x', Object.keys(movie[0].sentiment_per_day)[0], Object.keys(movie[0].sentiment_per_day)[1], Object.keys(movie[0].sentiment_per_day)[2], Object.keys(movie[0].sentiment_per_day)[3], Object.keys(movie[0].sentiment_per_day)[4], Object.keys(movie[0].sentiment_per_day)[5], Object.keys(movie[0].sentiment_per_day)[6]],
+            [movie[0].title, movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[0]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[1]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[2]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[3]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[4]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[5]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[6]]],
+            [movie[1].title, movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[0]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[1]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[2]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[3]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[4]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[5]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[6]]],
+            [movie[2].title, movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[0]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[1]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[2]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[3]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[4]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[5]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[6]]],
+            [movie[3].title, movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[0]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[1]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[2]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[3]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[4]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[5]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[6]]],
+        ]
+    });
+
+    chart7.load({
+        columns: [
+            ['x', Object.keys(movie[0].tweets_per_day)[0], Object.keys(movie[0].tweets_per_day)[1], Object.keys(movie[0].tweets_per_day)[2], Object.keys(movie[0].tweets_per_day)[3], Object.keys(movie[0].tweets_per_day)[4], Object.keys(movie[0].tweets_per_day)[5], Object.keys(movie[0].tweets_per_day)[6]],
+            [movie[0].title, movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[0]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[1]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[2]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[3]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[4]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[5]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[6]]],
+            [movie[1].title, movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[0]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[1]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[2]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[3]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[4]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[5]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[6]]],
+            [movie[2].title, movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[0]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[1]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[2]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[3]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[4]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[5]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[6]]],
+            [movie[3].title, movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[0]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[1]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[2]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[3]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[4]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[5]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[6]]],
+        ]
+    });
+
     $("#thumbnail5").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[4].poster_path, "title":movie[4].title});
     document.getElementById("thumbnail5").style.visibility = "visible";
+
+    chart4.load({
+        rows: [
+            [movie[0].title, movie[1].title, movie[2].title, movie[3].title, movie[4].title],
+            [movie[0].budget, movie[1].budget, movie[2].budget, movie[3].budget, movie[4].budget],
+            [movie[0].revenue, movie[1].revenue, movie[2].revenue, movie[3].revenue, movie[4].revenue],
+        ],
+        type: 'bar',
+    });
+
+    chart5.load({
+        rows: [
+            [movie[0].title, movie[1].title, movie[2].title, movie[3].title, movie[4].title],
+            [movie[0].sentiment_rating, movie[1].sentiment_rating, movie[2].sentiment_rating, movie[3].sentiment_rating, movie[4].sentiment_rating],
+            [movie[0].vote_average, movie[1].vote_average, movie[2].vote_average, movie[3].vote_average, movie[4].vote_average], 
+            [movie[0].imdb_rating, movie[1].imdb_rating, movie[2].imdb_rating, movie[3].imdb_rating, movie[4].imdb_rating],
+            [movie[0].critics_rating, movie[1].critics_rating, movie[2].critics_rating, movie[3].critics_rating, movie[4].critics_rating],
+        ],
+        type: 'bar',
+    });
+
+    chart6.load({
+        columns: [
+            ['x', Object.keys(movie[0].sentiment_per_day)[0], Object.keys(movie[0].sentiment_per_day)[1], Object.keys(movie[0].sentiment_per_day)[2], Object.keys(movie[0].sentiment_per_day)[3], Object.keys(movie[0].sentiment_per_day)[4], Object.keys(movie[0].sentiment_per_day)[5], Object.keys(movie[0].sentiment_per_day)[6]],
+            [movie[0].title, movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[0]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[1]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[2]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[3]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[4]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[5]], movie[0].sentiment_per_day[Object.keys(movie[0].sentiment_per_day)[6]]],
+            [movie[1].title, movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[0]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[1]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[2]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[3]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[4]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[5]], movie[1].sentiment_per_day[Object.keys(movie[1].sentiment_per_day)[6]]],
+            [movie[2].title, movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[0]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[1]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[2]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[3]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[4]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[5]], movie[2].sentiment_per_day[Object.keys(movie[2].sentiment_per_day)[6]]],
+            [movie[3].title, movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[0]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[1]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[2]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[3]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[4]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[5]], movie[3].sentiment_per_day[Object.keys(movie[3].sentiment_per_day)[6]]],
+            [movie[4].title, movie[4].sentiment_per_day[Object.keys(movie[4].sentiment_per_day)[0]], movie[4].sentiment_per_day[Object.keys(movie[4].sentiment_per_day)[1]], movie[4].sentiment_per_day[Object.keys(movie[4].sentiment_per_day)[2]], movie[4].sentiment_per_day[Object.keys(movie[4].sentiment_per_day)[3]], movie[4].sentiment_per_day[Object.keys(movie[4].sentiment_per_day)[4]], movie[4].sentiment_per_day[Object.keys(movie[4].sentiment_per_day)[5]], movie[4].sentiment_per_day[Object.keys(movie[4].sentiment_per_day)[6]]],
+        ]
+    });
+
+    chart7.load({
+        columns: [
+            ['x', Object.keys(movie[0].tweets_per_day)[0], Object.keys(movie[0].tweets_per_day)[1], Object.keys(movie[0].tweets_per_day)[2], Object.keys(movie[0].tweets_per_day)[3], Object.keys(movie[0].tweets_per_day)[4], Object.keys(movie[0].tweets_per_day)[5], Object.keys(movie[0].tweets_per_day)[6]],
+            [movie[0].title, movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[0]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[1]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[2]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[3]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[4]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[5]], movie[0].tweets_per_day[Object.keys(movie[0].tweets_per_day)[6]]],
+            [movie[1].title, movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[0]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[1]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[2]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[3]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[4]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[5]], movie[1].tweets_per_day[Object.keys(movie[1].tweets_per_day)[6]]],
+            [movie[2].title, movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[0]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[1]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[2]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[3]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[4]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[5]], movie[2].tweets_per_day[Object.keys(movie[2].tweets_per_day)[6]]],
+            [movie[3].title, movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[0]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[1]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[2]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[3]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[4]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[5]], movie[3].tweets_per_day[Object.keys(movie[3].tweets_per_day)[6]]],
+            [movie[4].title, movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[0]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[1]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[2]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[3]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[4]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[5]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[6]]],
+        ]
+    });
 
 }
 
