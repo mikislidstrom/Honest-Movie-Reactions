@@ -83,6 +83,7 @@ movie_titles(SessionID, _Env, _Input) ->
 
 create_movie_json(MovieId) ->
 	{MovieJSON} = jiffy:decode(db_handler:get("Movies", MovieId)),
+	NewMovieJSON = lists:keyreplace(<<"vote_average">>, 1, MovieJSON, {<<"vote_average">>, proplists:get_value(<<"vote_average">>, MovieJSON)*10}),
 	{[TotalTweets, MovieTweets, SentimentRating, _, {TweetsDayKey, {TweetsDay}}, {SentimentDayKey, {SentimentDay}}]} = jiffy:decode(db_handler:get("Stats", MovieId)),
 	NewSentimentDay = {SentimentDayKey, {[value(X, SentimentDay)||X<-days(7)]}},
 	NewTweetsDay = {TweetsDayKey, {[value(X, TweetsDay)||X<-days(7)]}},
@@ -91,7 +92,7 @@ create_movie_json(MovieId) ->
 	%NewWordCloud = {WordCloudKey, lists:concat([lists:duplicate(proplists:get_value(Key, WordCloud), Key) || Key <- proplists:get_keys(WordCloud)])},
 	MovieStats = [TotalTweets, MovieTweets, SentimentRating, NewTweetsDay, NewSentimentDay],
 
-	jiffy:encode({MovieJSON ++ MovieStats}).
+	jiffy:encode({NewMovieJSON ++ MovieStats}).
 
 
 %% Helper functions to create the weekly stats for JSON
