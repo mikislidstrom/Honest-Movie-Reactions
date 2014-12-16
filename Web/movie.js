@@ -70,6 +70,7 @@ function updateStatPage() {
 $.cookie.json = true; 
     
     movie = [$.cookie('movie1'), $.cookie('movie2'), $.cookie('movie3'), $.cookie('movie4'), $.cookie('movie5')];
+    frequency_list = [$.cookie('moviewords1'), $.cookie('moviewords2'), $.cookie('moviewords3'), $.cookie('moviewords4'), $.cookie('moviewords5')];
 
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[0].backdrop_path +')');
     $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[0].poster_path, "title":movie[0].title});
@@ -113,19 +114,12 @@ $.cookie.json = true;
         },
         });
 
-    $.ajax({
-        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie[0].id,
-        async: false,
-        dataType: 'json',
-        success: function(data) {
-            frequency_list = data;
-        }
-    });
+    clearWords();
 
     d3.layout.cloud().size([275, 360])
-            .words(frequency_list)
+            .words(frequency_list[0])
             .rotate(0)
-            .fontSize(function(d) { return d.size*4; })
+            .fontSize(function(d) { return d.size; })
             .on("end", draw)
             .start();
 
@@ -196,7 +190,16 @@ $.cookie.json = true;
                     },
                     });
 
-                break;
+                clearWords();
+
+                d3.layout.cloud().size([275, 360])
+                    .words(frequency_list[number-1])
+                    .rotate(0)
+                    .fontSize(function(d) { return d.size; })
+                    .on("end", draw)
+                    .start();
+                
+                break;                
 
             case 3:
                 var number = this.id.charAt(9);
@@ -210,7 +213,9 @@ $.cookie.json = true;
 
                     case 2: 
                     $.cookie('movie'+number, $.cookie('movie'+(parseInt(number)+1).toString()));
+                    $.cookie('moviewords'+number, $.cookie('moviewords'+(parseInt(number)+1).toString()));
                     $.removeCookie('movie2');
+                    $.removeCookie('moviewords2');
                     document.getElementById("thumbnail2").style.visibility = "hidden";
                     chart4.unload({});
                     chart5.unload({});
@@ -220,8 +225,11 @@ $.cookie.json = true;
 
                     case 3:
                     $.cookie('movie'+number, $.cookie('movie'+(parseInt(number)+1).toString()));
+                    $.cookie('moviewords'+number, $.cookie('moviewords'+(parseInt(number)+1).toString()));
                     $.cookie('movie'+(parseInt(number)+1).toString(), $.cookie('movie'+(parseInt(number)+2).toString()));
+                    $.cookie('moviewords'+(parseInt(number)+1).toString(), $.cookie('moviewords'+(parseInt(number)+2).toString()));
                     $.removeCookie('movie3');
+                    $.removeCookie('moviewords3');
                     document.getElementById("thumbnail3").style.visibility = "hidden";
                     chart4.unload({});
                     chart5.unload({});
@@ -231,9 +239,13 @@ $.cookie.json = true;
 
                     case 4: 
                     $.cookie('movie'+number, $.cookie('movie'+(parseInt(number)+1).toString()));
+                    $.cookie('moviewords'+number, $.cookie('moviewords'+(parseInt(number)+1).toString()));
                     $.cookie('movie'+(parseInt(number)+1).toString(), $.cookie('movie'+(parseInt(number)+2).toString()));
+                    $.cookie('moviewords'+(parseInt(number)+1).toString(), $.cookie('moviewords'+(parseInt(number)+2).toString()));
                     $.cookie('movie'+(parseInt(number)+2).toString(), $.cookie('movie'+(parseInt(number)+3).toString()));
+                    $.cookie('moviewords'+(parseInt(number)+2).toString(), $.cookie('moviewords'+(parseInt(number)+3).toString()));                    
                     $.removeCookie('movie4');
+                    $.removeCookie('moviewords4');
                     document.getElementById("thumbnail4").style.visibility = "hidden";
                     chart4.unload({});
                     chart5.unload({});
@@ -243,10 +255,15 @@ $.cookie.json = true;
 
                     case 5: 
                     $.cookie('movie'+number, $.cookie('movie'+(parseInt(number)+1).toString()));
+                    $.cookie('moviewords'+number, $.cookie('moviewords'+(parseInt(number)+1).toString()));
                     $.cookie('movie'+(parseInt(number)+1).toString(), $.cookie('movie'+(parseInt(number)+2).toString()));
+                    $.cookie('moviewords'+(parseInt(number)+1).toString(), $.cookie('moviewords'+(parseInt(number)+2).toString()));
                     $.cookie('movie'+(parseInt(number)+2).toString(), $.cookie('movie'+(parseInt(number)+3).toString()));
+                    $.cookie('moviewords'+(parseInt(number)+2).toString(), $.cookie('moviewords'+(parseInt(number)+3).toString()));                    
                     $.cookie('movie'+(parseInt(number)+3).toString(), $.cookie('movie'+(parseInt(number)+4).toString()));
+                    $.cookie('moviewords'+(parseInt(number)+3).toString(), $.cookie('moviewords'+(parseInt(number)+4).toString()));                    
                     $.removeCookie('movie5');
+                    $.removeCookie('moviewords5');
                     document.getElementById("thumbnail5").style.visibility = "hidden";                    
                     chart4.unload({});
                     chart5.unload({});
@@ -527,7 +544,10 @@ function search() {
 
             getTweets(movieJSON.id);
             updatePage();
-        };
+        }
+        else{
+            alert("No matching result");
+        }
     };
 }
 
@@ -550,6 +570,17 @@ function initStatPage() {
 
     $.cookie.json = true;
     $.cookie('movie1', $.cookie('movieJSONcurr'));
+    var movie = $.cookie('movie1');
+    $.ajax({
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            frequency_list = data;
+            $.cookie('moviewords1', frequency_list);
+        }
+    });
+
     statistics = window.open("statistics.html","statistics");
 
 }
@@ -588,21 +619,61 @@ function add() {
 
         case 1: 
         $.cookie('movie2', $.cookie('movieJSONcurr'));
+        var movie = $.cookie('movie2');
+        $.ajax({
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            frequency_list = data;
+            $.cookie('moviewords2', frequency_list);
+        }
+        })
         statistics.updateStatPage();
         break;        
 
         case 2: 
         $.cookie('movie3', $.cookie('movieJSONcurr'));
+        var movie = $.cookie('movie3');
+        $.ajax({
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            frequency_list = data;
+            $.cookie('moviewords3', frequency_list);
+        }
+        })
         statistics.updateStatPage();
         break;
 
         case 3: 
         $.cookie('movie4', $.cookie('movieJSONcurr'));
+        var movie = $.cookie('movie4');
+        $.ajax({
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            frequency_list = data;
+            $.cookie('moviewords4', frequency_list);
+        }
+        })
         statistics.updateStatPage();
         break;
 
         case 4: 
         $.cookie('movie5', $.cookie('movieJSONcurr'));
+        var movie = $.cookie('movie5');
+        $.ajax({
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            frequency_list = data;
+            $.cookie('moviewords5', frequency_list);
+        }
+        })
         statistics.updateStatPage();
         break;
 
@@ -615,20 +686,25 @@ function add() {
 
 function draw(words) {
     d3.select("#wordcloud").append("svg")
+            .attr("id","wordcloud")
             .attr("width", 275)
             .attr("height", 360)
             .attr("class", "wordcloud")
             .append("g")
             // without the transform, words words would get cutoff to the left and top, they would
             // appear outside of the SVG area
-            .attr("transform", "translate(100,200)")
+            .attr("transform", "translate(80,100)")
             .selectAll("text")
             .data(words)
             .enter().append("text")
-            .style("font-size", function(d) { return d.size + "px"; })
+            .style("font-size", function(d) { return d.size*4 + "px"; })
             .style("fill", function(d, i) { return color(i); })
             .attr("transform", function(d) {
                 return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
             })
             .text(function(d) { return d.text; });
+}
+
+function clearWords() {
+    d3.select("#wordcloud").select("svg").remove();
 }
