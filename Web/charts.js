@@ -240,11 +240,3 @@ d3.select('#chart7 svg').append('text')
     .attr('text-anchor', 'middle')
     .style('font-size', '1.3em')
     .text('Amount of Tweets - Last 7 Days');
-
-    
-
-
-
-
-
-

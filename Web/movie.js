@@ -3,7 +3,12 @@ var titles;
 var id = "101";
 var keys;
 var statistics;
+var movie;
 var highlightedMovie;
+var frequency_list;
+var color = d3.scale.linear()
+            .domain([0,1,2,3,4,5,6,10,15,20,100])
+            .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
 
 function updatePage() {
 
@@ -64,7 +69,7 @@ function updateStatPage() {
 
 $.cookie.json = true; 
     
-    var movie = [$.cookie('movie1'), $.cookie('movie2'), $.cookie('movie3'), $.cookie('movie4'), $.cookie('movie5')];
+    movie = [$.cookie('movie1'), $.cookie('movie2'), $.cookie('movie3'), $.cookie('movie4'), $.cookie('movie5')];
 
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[0].backdrop_path +')');
     $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[0].poster_path, "title":movie[0].title});
@@ -108,6 +113,22 @@ $.cookie.json = true;
         },
         });
 
+    $.ajax({
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie[0].id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            frequency_list = data;
+        }
+    });
+
+    d3.layout.cloud().size([275, 360])
+            .words(frequency_list)
+            .rotate(0)
+            .fontSize(function(d) { return d.size*4; })
+            .on("end", draw)
+            .start();
+
     if($.cookie('tutorial2') == undefined) {
     alert("On this page you can view more detailed statistics about a movie.\nYou may stack up to 5 movies on this page and compare their statistics against each other.\n\nThe movies you have selected to compare are displayed as thumbnails:\nHOVER a thumbnail to see the movie title.\nLEFT-CLICK a thumbnail to highlight a particular movie (some statistics are displayed for this movie only and not compared).\nRIGHT-CLICK a thumbnail to remove a particular movie from comparison.")
     var date = new Date();
@@ -141,10 +162,7 @@ $.cookie.json = true;
                 document.getElementById(this.id).style.border = "5px inset black";
                 highlightedMovie = this.id;
                 var number = highlightedMovie.charAt(9);
-                //var movie Has to be declared again inside this function due to timing to avoid refreshing entire script
-                var movie = [$.cookie('movie1'), $.cookie('movie2'), $.cookie('movie3'), $.cookie('movie4'), $.cookie('movie5')];
                 $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[number-1].backdrop_path +')');
-
                 json_Chart1 = [{'Budget':movie[number-1].budget, 'Total Revenue':movie[number-1].revenue}];
                 json_Chart2 = [{'This Movie':movie[number-1].movieTweets, 'All Movies':movie[number-1].totalTweets}];
                 json_Chart3 = [{'Sentiment Score':movie[number-1].sentiment_rating}];
@@ -594,3 +612,23 @@ function add() {
     }  
 
 };
+
+function draw(words) {
+    d3.select("#wordcloud").append("svg")
+            .attr("width", 275)
+            .attr("height", 360)
+            .attr("class", "wordcloud")
+            .append("g")
+            // without the transform, words words would get cutoff to the left and top, they would
+            // appear outside of the SVG area
+            .attr("transform", "translate(100,200)")
+            .selectAll("text")
+            .data(words)
+            .enter().append("text")
+            .style("font-size", function(d) { return d.size + "px"; })
+            .style("fill", function(d, i) { return color(i); })
+            .attr("transform", function(d) {
+                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.text; });
+}
