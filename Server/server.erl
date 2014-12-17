@@ -51,7 +51,7 @@ handle_cast(get_movies, State) ->
 
 handle_cast(update_stats, State) -> 
 	spawn(fun() -> 
-		mapred:load_stats() end),
+		db_integration:load_stats() end),
 		{noreply, State};
 
 %% spawns a new process.

@@ -1,5 +1,7 @@
 -module(db_integration).
--export([store_movie/1, get_movie/1, store_movies/1, delete_all/1, delete_movies/1, update_movies/0, id_title_list/0, store_releases/0, store_releases/1, store_tweet/3]).
+-export([store_movie/1, get_movie/1, store_movies/1, delete_all/1, delete_movies/1]).
+-export([update_movies/0, id_title_list/0, store_releases/0, store_releases/1, store_tweet/3]).
+-export([load_stats/0, load_movie_stats/1]).
 
 %% Stores movies in the database from a list of movie ids
 store_movies([]) -> ok;
@@ -10,8 +12,14 @@ store_movies([X|Xs]) ->
 
 %% Stores the movie in the database for the inputed movie id 
 store_movie(Id) -> 
+	case db_handler:get("Stats", Id) of
+		{error, notfound} ->
+			StatObj = jiffy:encode({[{<<"totalTweets">>, 0}, {<<"movieTweets">>, 0}, {<<"sentiment_rating">>, 0}, {<<"wordcloud">>, 0},{<<"sentiment_per_day">>, 0}, {<<"tweets_per_day">>, 0}]}),
+			db_handler:put("Stats", Id, StatObj);
+		_ ->
+			ok
+	end,
 	Obj = movies:id(Id),
-	%StatObj = jiffy:encode({}),
 	db_handler:put("Movies", Id, Obj).
 
 %% Gets the movie data from the database for a movie with inputed movie id
@@ -64,3 +72,19 @@ store_releases(Date) ->
 %% Store a tweet
 store_tweet(Bucket, Key, Obj) ->
 	db_handler:put(Bucket, Key, Obj).
+
+%% Update the stats
+load_stats() ->
+	[db_handler:put("Stats", Key, jiffy:encode(load_movie_stats(Key)))||Key <- db_handler:keys("Movies")].
+
+%% Loads the movie stats per Key (movie)
+load_movie_stats(Key) ->
+	SumTweets = {<<"totalTweets">>, db_handler:sum_tweets()},
+	SumTweetsMovie = {<<"movieTweets">>, length(db_handler:keys(Key))},
+	SentimentRating = {<<"sentiment_rating">>, db_handler:sentiment_average(Key)},
+	WordCloud = {<<"wordcloud">>, {db_handler:wordcount(Key)}},
+	TweetsDay = {<<"tweets_per_day">>, {db_handler:tweets_day(Key)}},
+	SentimentDay = {<<"sentiment_per_day">>, {db_handler:sentiment_day(Key)}},
+	{[SumTweets, SumTweetsMovie, SentimentRating, WordCloud, TweetsDay, SentimentDay]}.
+
+

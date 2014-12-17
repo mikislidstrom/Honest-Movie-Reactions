@@ -1,40 +1,39 @@
 -module(mapred).
--export([wordcount/1, map_wordcount/3, red_count_words/2, titles/0, sum_tweets/0]).
--export([sentiment_average/1, sentiment_day/1, map_sentiment_day/3, red_sentiment_day/2]).
--export([tweets_day/1, map_tweets_day/3, read/1, load_stats/0, load_movie_stats/1]).
+-export([map_sentiment_day/3, red_sentiment_day/2, map_titles/3, map_sentiment_average/3]).
+-export([map_tweets_day/3, red_count_words/2, map_wordcount/3]).
 
 % Path to sentiment.txt
 -define(FILE_PATH, "/home/nizzon/Prog/Erlang/Project/Server/sentiment.txt").
 -define(PORT, 10017).
 -define(HOST, "127.0.0.1").
 
-sum_tweets() ->
-	Movies = db_handler:keys("Movies"),
-	lists:sum([length(db_handler:keys(Movie))||Movie <- Movies]).
+% sum_tweets() ->
+% 	Movies = db_handler:keys("Movies"),
+% 	lists:sum([length(db_handler:keys(Movie))||Movie <- Movies]).
 
 %% Wordcount mapreaduce
-wordcount(Bucket) ->
-	{ok, File} = file:open(?FILE_PATH, read),
-	Keys = read(File),
-	file:close(File),
-	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
-	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
-		Pid,
-		list_to_binary(Bucket),
-		[
-			{map, {modfun, ?MODULE, map_wordcount}, Keys, false},
-			{reduce, {modfun, ?MODULE, red_count_words}, none, true}
-		]
-	),
-	dict:to_list(Result).
+% wordcount(Bucket) ->
+% 	{ok, File} = file:open(?FILE_PATH, read),
+% 	Keys = read(File),
+% 	file:close(File),
+% 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
+% 	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
+% 		Pid,
+% 		list_to_binary(Bucket),
+% 		[
+% 			{map, {modfun, ?MODULE, map_wordcount}, Keys, false},
+% 			{reduce, {modfun, ?MODULE, red_count_words}, none, true}
+% 		]
+% 	),
+% 	dict:to_list(Result).
 
-%% Map for wordcount
+%% Map function for wordcount
 map_wordcount(RiakObject, _, Keys) ->
 	{PropList} = jiffy:decode(riak_object:get_value(RiakObject)),
 	Tokens = string:tokens(string:to_lower(binary_to_list(proplists:get_value(<<"text">>, PropList))), ",.:/(){}[]- "),
 	[dict:from_list([{list_to_binary(I), 1} || I <- Tokens, lists:member(I, Keys)])].
 
-%% Reduce for wordcount
+%% Reduce function for wordcount
 red_count_words(Input, _) -> 
 	[lists:foldl(
 		fun(Tag, Acc) ->
@@ -51,18 +50,18 @@ red_count_words(Input, _) ->
 	)].
 
 %% Get the average sentiment value for tweets per day in a list for a movie
-sentiment_day(Bucket) ->
-	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
-	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
-		Pid,
-		list_to_binary(Bucket),
-		[
-			{map, {modfun, ?MODULE, map_sentiment_day}, none, false},
-			{reduce, {modfun, ?MODULE, red_sentiment_day}, none, true}
-		]
-	),
-	riakc_pb_socket:stop(Pid),
-	[{Key, (round((lists:sum(List) / length(List)) * 20 * math:pow(10, 2)) / math:pow(10,2))}||{Key,List} <- dict:to_list(Result)].
+% sentiment_day(Bucket) ->
+% 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
+% 	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
+% 		Pid,
+% 		list_to_binary(Bucket),
+% 		[
+% 			{map, {modfun, ?MODULE, map_sentiment_day}, none, false},
+% 			{reduce, {modfun, ?MODULE, red_sentiment_day}, none, true}
+% 		]
+% 	),
+% 	riakc_pb_socket:stop(Pid),
+%	[{Key, (round((lists:sum(List) / length(List)) * 20 * math:pow(10, 2)) / math:pow(10,2))}||{Key,List} <- dict:to_list(Result)].
 
 map_sentiment_day(O,_,_) -> 
 	{PropList}=jiffy:decode(riak_object:get_value(O)),
@@ -85,57 +84,64 @@ red_sentiment_day(Input, _) ->
 		Input
 	)].
 
+map_titles(O,_,_) ->
+	{PropList} = jiffy:decode(riak_object:get_value(O)),
+	[{proplists:get_value(<<"title">>, PropList), riak_object:key(O)}].
+
+map_sentiment_average(O,_,_) ->
+	{PropList} = jiffy:decode(riak_object:get_value(O)),
+	[proplists:get_value(<<"rating">>, PropList)].
 
 %% Titles list
-titles() ->
-	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
-	{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
-		Pid,
-		<<"Movies">>,
-		[
-			{map, {qfun, fun(O,_,_) -> 
-				{PropList} = jiffy:decode(riak_object:get_value(O)),
-				[{proplists:get_value(<<"title">>, PropList), riak_object:key(O)}]
-			end}, none, true}
-		]
-	),
-	riakc_pb_socket:stop(Pid),
-	Result.
+% titles() ->
+% 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
+% 	{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
+% 		Pid,
+% 		<<"Movies">>,
+% 		[
+% 			{map, {qfun, fun(O,_,_) -> 
+% 				{PropList} = jiffy:decode(riak_object:get_value(O)),
+% 				[{proplists:get_value(<<"title">>, PropList), riak_object:key(O)}]
+% 			end}, none, true}
+% 		]
+% 	),
+% 	riakc_pb_socket:stop(Pid),
+% 	Result.
 
-%% Get the average sentiments value for all tweets for a movie
-sentiment_average(Bucket) ->
-	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
-	case lists:member(list_to_binary(Bucket), db_handler:buckets()) of
-		true ->
-			{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
-				Pid,
-				list_to_binary(Bucket),
-				[
-					{map, {qfun, fun(O,_,_) ->
-						{PropList} = jiffy:decode(riak_object:get_value(O)),
-						[proplists:get_value(<<"rating">>, PropList)]
-					end}, none, true}
-				]
-			),
-			riakc_pb_socket:stop(Pid),
-			P = math:pow(10, 2),
-    		round((lists:sum(Result) / length(Result)) * 20 * P) / P;
-    	false -> 0
-    end.
+% %% Get the average sentiments value for all tweets for a movie
+% sentiment_average(Bucket) ->
+% 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
+% 	case lists:member(list_to_binary(Bucket), db_handler:buckets()) of
+% 		true ->
+% 			{ok, [{0, Result}]} = riakc_pb_socket:mapred_bucket(
+% 				Pid,
+% 				list_to_binary(Bucket),
+% 				[
+% 					{map, {qfun, fun(O,_,_) ->
+% 						{PropList} = jiffy:decode(riak_object:get_value(O)),
+% 						[proplists:get_value(<<"rating">>, PropList)]
+% 					end}, none, true}
+% 				]
+% 			),
+% 			riakc_pb_socket:stop(Pid),
+% 			P = math:pow(10, 2),
+%     		round((lists:sum(Result) / length(Result)) * 20 * P) / P;
+%     	false -> 0
+%     end.
 
-%% Gets the amount of tweets per day for a movie
-tweets_day(Bucket) ->
-	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
-	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
-		Pid,
-		list_to_binary(Bucket),
-		[
-			{map, {modfun, ?MODULE, map_tweets_day}, none, false},
-			{reduce, {modfun, ?MODULE, red_count_words}, none, true}
-		]
-	),
-	riakc_pb_socket:stop(Pid),
-	dict:to_list(Result).
+% %% Gets the amount of tweets per day for a movie
+% tweets_day(Bucket) ->
+% 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
+% 	{ok, [{1, [Result]}]} = riakc_pb_socket:mapred_bucket(
+% 		Pid,
+% 		list_to_binary(Bucket),
+% 		[
+% 			{map, {modfun, mapred, map_tweets_day}, none, false},
+% 			{reduce, {modfun, mapred, red_count_words}, none, true}
+% 		]
+% 	),
+% 	riakc_pb_socket:stop(Pid),
+% 	dict:to_list(Result).
 
 %% Map tweets per day
 map_tweets_day(RiakObject, _, _) ->
@@ -165,26 +171,26 @@ month_num(Day) ->
 		"Dec" -> "12"
 	end.
 
-%% Read line by line of text file
-read(File) ->
-    case file:read_line(File) of
-        {ok, [_|Data]} -> [lists:sublist(Data, length(Data) -1) | read(File)];
-        eof        -> []
-    end.
+% %% Read line by line of text file
+% read(File) ->
+%     case file:read_line(File) of
+%         {ok, [_|Data]} -> [lists:sublist(Data, length(Data) -1) | read(File)];
+%         eof        -> []
+%     end.
 
 
-load_stats() ->
-	%db_handler:put(<<"Stats">>, list_to_binary(Key), 
-	%{_,_,Start} = os:timestamp(),
-	[db_handler:put("Stats", Key, jiffy:encode(load_movie_stats(Key)))||Key <- db_handler:keys("Movies")].
-	%{_,_,Stop} = os:timestamp(),
-	%Time = Start - Stop,
+% load_stats() ->
+% 	%db_handler:put(<<"Stats">>, list_to_binary(Key), 
+% 	%{_,_,Start} = os:timestamp(),
+% 	[db_handler:put("Stats", Key, jiffy:encode(load_movie_stats(Key)))||Key <- db_handler:keys("Movies")].
+% 	%{_,_,Stop} = os:timestamp(),
+% 	%Time = Start - Stop,
 
-load_movie_stats(Key) ->
-	SumTweets = {<<"totalTweets">>, sum_tweets()},
-	SumTweetsMovie = {<<"movieTweets">>, length(db_handler:keys(Key))},
-	SentimentRating = {<<"sentiment_rating">>, mapred:sentiment_average(Key)},
-	WordCloud = {<<"wordcloud">>, {mapred:wordcount(Key)}},
-	TweetsDay = {<<"tweets_per_day">>, {mapred:tweets_day(Key)}},
-	SentimentDay = {<<"sentiment_per_day">>, {mapred:sentiment_day(Key)}},
-	{[SumTweets, SumTweetsMovie, SentimentRating, WordCloud, TweetsDay, SentimentDay]}.
+% load_movie_stats(Key) ->
+% 	SumTweets = {<<"totalTweets">>, sum_tweets()},
+% 	SumTweetsMovie = {<<"movieTweets">>, length(db_handler:keys(Key))},
+% 	SentimentRating = {<<"sentiment_rating">>, mapred:sentiment_average(Key)},
+% 	WordCloud = {<<"wordcloud">>, {mapred:wordcount(Key)}},
+% 	TweetsDay = {<<"tweets_per_day">>, {mapred:tweets_day(Key)}},
+% 	SentimentDay = {<<"sentiment_per_day">>, {mapred:sentiment_day(Key)}},
+% 	{[SumTweets, SumTweetsMovie, SentimentRating, WordCloud, TweetsDay, SentimentDay]}.
