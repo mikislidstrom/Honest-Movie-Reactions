@@ -7,6 +7,39 @@ body {
 	width: 95%;
 }
 
+#help {
+	margin-top: 6%;
+	margin-bottom: 3%;
+	border-radius:10px;
+	opacity: 0.8;
+	background-color: #ffffff;
+	width: 30%;
+	height: auto;
+	float: center;
+	padding:1% 1%;
+}
+
+.helpBtn {
+	margin: 1%;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #c0deed;
+	border-radius: 10px;
+	color:#334466;
+	display:block;
+	float: center;
+	cursor:pointer;
+	font-size:17px;
+	padding:5% 22%;
+	text-decoration:none;
+	box-shadow: 
+	inset 0 0 8px  rgba(0,0,0,0.1),
+    		0 0 16px rgba(0,0,0,0.1);
+}
+.helpBtn:hover {
+	opacity: 0.5;
+}
+
 #search {
 	margin-top: 3%;
 	margin-bottom: 3%;
@@ -222,7 +255,6 @@ body {
 }
 
 #wordcloud {
-	margin-bottom: 3%;
 	margin-left: 0%;
 	margin-right: 0%;
 	height: 100%;

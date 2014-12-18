@@ -4,7 +4,7 @@ var id = "101";
 var keys;
 var statistics;
 var movie;
-var highlightedMovie;
+var highlightedThumb;
 var frequency_list;
 var color = d3.scale.linear()
             .domain([0,1,2,3,4,5,6,10,15,20,100])
@@ -59,7 +59,7 @@ function updatePage() {
     if($.cookie('tutorial1') == undefined) {
     alert("On this page you can view information and statistics about movies.\n\nUse the search-field together with the SEARCH-button to search for a specific movie by its title or click the RANDOM-button to check-out a random movie.\n\nYou can view more statistics about a movie by clicking on 'VIEW FULL STATISTICS', additional movies can be added in order to compare statistics by clicking 'ADD TO COMPARE'.");
     var date = new Date();
-    var minutes = 15;
+    var minutes = 60;
     date.setTime(date.getTime() + (minutes * 60 * 1000));
     $.cookie('tutorial1', 'true', { expires: date });
     }
@@ -71,19 +71,26 @@ $.cookie.json = true;
     
     movie = [$.cookie('movie1'), $.cookie('movie2'), $.cookie('movie3'), $.cookie('movie4'), $.cookie('movie5')];
     frequency_list = [$.cookie('moviewords1'), $.cookie('moviewords2'), $.cookie('moviewords3'), $.cookie('moviewords4'), $.cookie('moviewords5')];
-
-    $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[0].backdrop_path +')');
-    $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[0].poster_path, "title":movie[0].title});
-    
-    if (highlightedMovie == null) {
-    highlightedMovie = "thumbnail1";
+    highlightedMovie = $.cookie('highlightedMovie');
+      
+    if (highlightedMovie == undefined) {
+    highlightedMovie = $.cookie('movie1');
+    highlightedThumb = "thumbnail1";
+    $.cookie('highlightedN', "1");
     }
 
-    document.getElementById(highlightedMovie).style.border = "5px inset black";
+    else {
+    highlightedThumb = "thumbnail" + $.cookie('highlightedN');
+    }
 
-    json_Chart1 = [{'Budget':movie[0].budget, 'Total Revenue':movie[0].revenue}];
-    json_Chart2 = [{'This Movie':movie[0].movieTweets, 'All Movies':movie[0].totalTweets}];
-    json_Chart3 = [{'Sentiment Score':movie[0].sentiment_rating}];
+    $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + highlightedMovie.backdrop_path +')');
+    $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[0].poster_path, "title":movie[0].title});
+
+    document.getElementById(highlightedThumb).style.border = "5px inset black";
+
+    json_Chart1 = [{'Budget':highlightedMovie.budget, 'Total Revenue':highlightedMovie.revenue}];
+    json_Chart2 = [{'This Movie':highlightedMovie.movieTweets, 'All Movies':highlightedMovie.totalTweets}];
+    json_Chart3 = [{'Sentiment Score':highlightedMovie.sentiment_rating}];
 
     chart1.load({    
         json: json_Chart1,
@@ -117,7 +124,7 @@ $.cookie.json = true;
     clearWords();
 
     d3.layout.cloud().size([275, 360])
-            .words(frequency_list[0])
+            .words(frequency_list[parseInt($.cookie('highlightedN')-1)])
             .rotate(0)
             .fontSize(function(d) { return d.size; })
             .on("end", draw)
@@ -126,7 +133,7 @@ $.cookie.json = true;
     if($.cookie('tutorial2') == undefined) {
     alert("On this page you can view more detailed statistics about a movie.\nYou may stack up to 5 movies on this page and compare their statistics against each other.\n\nThe movies you have selected to compare are displayed as thumbnails:\nHOVER a thumbnail to see the movie title.\nLEFT-CLICK a thumbnail to highlight a particular movie (some statistics are displayed for this movie only and not compared).\nRIGHT-CLICK a thumbnail to remove a particular movie from comparison.")
     var date = new Date();
-    var minutes = 15;
+    var minutes = 60;
     date.setTime(date.getTime() + (minutes * 60 * 1000));
     $.cookie('tutorial2', 'true', { expires: date });
     }
@@ -134,7 +141,7 @@ $.cookie.json = true;
     $('.thumbnail').mouseover(function(event) {
         switch (event.which) {
             default:
-                document.getElementById(highlightedMovie).style.border = "none";
+                document.getElementById(highlightedThumb).style.border = "none";
                 document.getElementById(this.id).style.border = "5px inset black";
                 break;
            }
@@ -144,7 +151,7 @@ $.cookie.json = true;
         switch (event.which) {
             default:
                 document.getElementById(this.id).style.border = "none";
-                document.getElementById(highlightedMovie).style.border = "5px inset black";
+                document.getElementById(highlightedThumb).style.border = "5px inset black";
                 break;
            }
     })
@@ -152,15 +159,16 @@ $.cookie.json = true;
     $('.thumbnail').mousedown(function(event) {
         switch (event.which) {
             case 1:
-                document.getElementById(highlightedMovie).style.border = "none";
+                document.getElementById(highlightedThumb).style.border = "none";
                 document.getElementById(this.id).style.border = "5px inset black";
-                highlightedMovie = this.id;
-                var number = highlightedMovie.charAt(9);
+                highlightedThumb = this.id;
+                var number = highlightedThumb.charAt(9);
                 $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[number-1].backdrop_path +')');
                 json_Chart1 = [{'Budget':movie[number-1].budget, 'Total Revenue':movie[number-1].revenue}];
                 json_Chart2 = [{'This Movie':movie[number-1].movieTweets, 'All Movies':movie[number-1].totalTweets}];
                 json_Chart3 = [{'Sentiment Score':movie[number-1].sentiment_rating}];
-
+                $.cookie('highlightedMovie', $.cookie('movie'+number));
+                $.cookie('highlightedN', number);
                 chart1.load({    
                     json: json_Chart1,
                     keys: {
@@ -204,6 +212,14 @@ $.cookie.json = true;
             case 3:
                 var number = this.id.charAt(9);
                 $.cookie.json = true;
+
+                if (number == parseInt($.cookie('highlightedN'))) {
+                    $.removeCookie('highlightedMovie');
+                    $.removeCookie('highlightedN');
+                }
+                else if (number < parseInt($.cookie('highlightedN'))) {
+                $.cookie('highlightedN', parseInt($.cookie('highlightedN')-1).toString());
+                }
 
                 switch (amountOfMovies()) {
                     case 1: 
@@ -569,19 +585,9 @@ function init() {
 function initStatPage() {
 
     $.cookie.json = true;
-    $.cookie('movie1', $.cookie('movieJSONcurr'));
-    var movie = $.cookie('movie1');
-    $.ajax({
-        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
-        async: false,
-        dataType: 'json',
-        success: function(data) {
-            frequency_list = data;
-            $.cookie('moviewords1', frequency_list);
-        }
-    });
 
     statistics = window.open("statistics.html","statistics");
+    add();
 
 }
 
@@ -589,7 +595,11 @@ function amountOfMovies() {
     $.cookie.json = true;
     var amount;
 
-    if($.cookie('movie2') == undefined) {
+    if($.cookie('movie1') == undefined) {
+        amount = 0;
+    }
+
+    else if($.cookie('movie2') == undefined) {
         amount = 1;
     }
 
@@ -617,11 +627,27 @@ function add() {
 
     switch (amountOfMovies()) {
 
-        case 1: 
-        $.cookie('movie2', $.cookie('movieJSONcurr'));
-        var movie = $.cookie('movie2');
+        case 0: 
+        alert("Added " + $.cookie('movieJSONcurr').title + " to comparison.");
+        $.cookie('movie1', $.cookie('movieJSONcurr'));
         $.ajax({
-        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + $.cookie('movie1').id,
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+            frequency_list = data;
+            $.cookie('moviewords1', frequency_list);
+        }
+        })
+        statistics.updateStatPage();
+        break;
+
+        case 1: 
+        if ($.cookie('movieJSONcurr').id != $.cookie('movie1').id){
+        alert("Added " + $.cookie('movieJSONcurr').title + " to comparison.");
+        $.cookie('movie2', $.cookie('movieJSONcurr'));
+        $.ajax({
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + $.cookie('movie2').id,
         async: false,
         dataType: 'json',
         success: function(data) {
@@ -630,13 +656,15 @@ function add() {
         }
         })
         statistics.updateStatPage();
+        }
         break;        
 
-        case 2: 
+        case 2:
+        if (($.cookie('movieJSONcurr').id != $.cookie('movie1').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie2').id)){ 
+        alert("Added " + $.cookie('movieJSONcurr').title + " to comparison.");        
         $.cookie('movie3', $.cookie('movieJSONcurr'));
-        var movie = $.cookie('movie3');
         $.ajax({
-        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + $.cookie('movie3').id,
         async: false,
         dataType: 'json',
         success: function(data) {
@@ -645,13 +673,15 @@ function add() {
         }
         })
         statistics.updateStatPage();
+        }
         break;
 
-        case 3: 
+        case 3:
+        if (($.cookie('movieJSONcurr').id != $.cookie('movie1').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie2').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie3').id)){ 
+        alert("Added " + $.cookie('movieJSONcurr').title + " to comparison.");        
         $.cookie('movie4', $.cookie('movieJSONcurr'));
-        var movie = $.cookie('movie4');
         $.ajax({
-        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + $.cookie('movie4').id,
         async: false,
         dataType: 'json',
         success: function(data) {
@@ -660,13 +690,15 @@ function add() {
         }
         })
         statistics.updateStatPage();
+        }
         break;
 
-        case 4: 
+        case 4:
+        if (($.cookie('movieJSONcurr').id != $.cookie('movie1').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie2').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie3').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie4').id)){ 
+        alert("Added " + $.cookie('movieJSONcurr').title + " to comparison.");
         $.cookie('movie5', $.cookie('movieJSONcurr'));
-        var movie = $.cookie('movie5');
         $.ajax({
-        url: "http://localhost:8081/erl/web_server:wordcloud?" + movie.id,
+        url: "http://localhost:8081/erl/web_server:wordcloud?" + $.cookie('movie5').id,
         async: false,
         dataType: 'json',
         success: function(data) {
@@ -675,10 +707,13 @@ function add() {
         }
         })
         statistics.updateStatPage();
+        }
         break;
 
-        case 5: 
+        case 5:
+        if (($.cookie('movieJSONcurr').id != $.cookie('movie1').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie2').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie3').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie4').id)&&($.cookie('movieJSONcurr').id != $.cookie('movie5').id)){  
         alert("Easy there NERD! You are currently comparing 5 movies, remove at least one before any more can be added.");
+        }
         break;
     }  
 
@@ -688,7 +723,7 @@ function draw(words) {
     d3.select("#wordcloud").append("svg")
             .attr("id","wordcloud")
             .attr("width", 275)
-            .attr("height", 360)
+            .attr("height", 340)
             .attr("class", "wordcloud")
             .append("g")
             // without the transform, words words would get cutoff to the left and top, they would
@@ -707,4 +742,13 @@ function draw(words) {
 
 function clearWords() {
     d3.select("#wordcloud").select("svg").remove();
+}
+
+function help(s) {
+    if (s == 1) {
+        alert("On this page you can view information and statistics about movies.\n\nUse the search-field together with the SEARCH-button to search for a specific movie by its title or click the RANDOM-button to check-out a random movie.\n\nYou can view more statistics about a movie by clicking on 'VIEW FULL STATISTICS', additional movies can be added in order to compare statistics by clicking 'ADD TO COMPARE'.");
+    }
+    else if (s == 2) {
+        alert("On this page you can view more detailed statistics about a movie.\nYou may stack up to 5 movies on this page and compare their statistics against each other.\n\nThe movies you have selected to compare are displayed as thumbnails:\nHOVER a thumbnail to see the movie title.\nLEFT-CLICK a thumbnail to highlight a particular movie (some statistics are displayed for this movie only and not compared).\nRIGHT-CLICK a thumbnail to remove a particular movie from comparison.");
+    }
 }
