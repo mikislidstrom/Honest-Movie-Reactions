@@ -20,49 +20,28 @@ function updatePage() {
     $("#imdb").html('<a href="http://www.imdb.com/title/' + movieJSON.imdb_id + '">IMDb</a>');
     $("#imagePoster").attr({"src": "https://image.tmdb.org/t/p/w500" + movieJSON.poster_path, "title":movieJSON.title});
     $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movieJSON.backdrop_path +')');
-    var json_Chart1 = [{'Budget':movieJSON.budget, 'Total Revenue':movieJSON.revenue}];
-    var json_Chart2 = [{'This Movie':movieJSON.movieTweets, 'All Movies':movieJSON.totalTweets}];
-    var json_Chart3 = [{'Sentiment Score':movieJSON.sentiment_rating}];
  
-
     setTweetTags();
 
+
     chart1.load({    
-        json: json_Chart1,
-        keys: {
-            value: ['Budget', 'Total Revenue']
-        },
-        colors: {
-        'Budget': '#ffa500',
-        'Total Revenue': '#0099cc',
-        }
+        columns: [
+            ['Budget', movieJSON.budget],
+            ['Total Revenue', movieJSON.revenue],
+        ]
         });
 
     chart2.load({    
-        json: json_Chart2,
-        keys: {
-            value: ['This Movie', 'All Movies']
-        },
-        colors: {
-        'This Movie': '#326ada',
-        'All Movies': '#a19c9c',
-        }
+        columns: [
+            ['This Movie', movieJSON.movieTweets],
+            ['All Movies', movieJSON.totalTweets],
+        ]
         });
 
     chart3.load({    
-        json: json_Chart3,
-        keys: {
-            value: ['Sentiment Score']
-        },
+        columns: [['Sentiment Score', movieJSON.sentiment_rating]]
         });
 
-    if($.cookie('tutorial1') == undefined) {
-    alert("On this page you can view information and statistics about movies.\n\nUse the search-field together with the SEARCH-button to search for a specific movie by its title or click the RANDOM-button to check-out a random movie.\n\nYou can view more statistics about a movie by clicking on 'VIEW FULL STATISTICS', additional movies can be added in order to compare statistics by clicking 'ADD TO COMPARE'.");
-    var date = new Date();
-    var minutes = 60;
-    date.setTime(date.getTime() + (minutes * 60 * 1000));
-    $.cookie('tutorial1', 'true', { expires: date });
-    }
 }
 
 function updateStatPage() {
@@ -83,42 +62,27 @@ $.cookie.json = true;
     highlightedThumb = "thumbnail" + $.cookie('highlightedN');
     }
 
-    $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + highlightedMovie.backdrop_path +')');
     $("#thumbnail1").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[0].poster_path, "title":movie[0].title});
+    $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + highlightedMovie.backdrop_path +')');
 
     document.getElementById(highlightedThumb).style.border = "5px inset black";
 
-    json_Chart1 = [{'Budget':highlightedMovie.budget, 'Total Revenue':highlightedMovie.revenue}];
-    json_Chart2 = [{'This Movie':highlightedMovie.movieTweets, 'All Movies':highlightedMovie.totalTweets}];
-    json_Chart3 = [{'Sentiment Score':highlightedMovie.sentiment_rating}];
-
     chart1.load({    
-        json: json_Chart1,
-        keys: {
-            value: ['Budget', 'Total Revenue']
-        },
-        colors: {
-        'Budget': '#ffa500',
-        'Total Revenue': '#0099cc',
-        }
+        columns: [
+            ['Budget', highlightedMovie.budget],
+            ['Total Revenue', highlightedMovie.revenue],
+        ]
         });
 
     chart2.load({    
-        json: json_Chart2,
-        keys: {
-            value: ['This Movie', 'All Movies']
-        },
-        colors: {
-        'This Movie': '#326ada',
-        'All Movies': '#a19c9c',
-        }
+        columns: [
+            ['This Movie', highlightedMovie.movieTweets],
+            ['All Movies', highlightedMovie.totalTweets],
+        ]
         });
 
     chart3.load({    
-        json: json_Chart3,
-        keys: {
-            value: ['Sentiment Score']
-        },
+        columns: [['Sentiment Score', highlightedMovie.sentiment_rating]]
         });
 
     clearWords();
@@ -129,14 +93,6 @@ $.cookie.json = true;
             .fontSize(function(d) { return d.size; })
             .on("end", draw)
             .start();
-
-    if($.cookie('tutorial2') == undefined) {
-    alert("On this page you can view more detailed statistics about a movie.\nYou may stack up to 5 movies on this page and compare their statistics against each other.\n\nThe movies you have selected to compare are displayed as thumbnails:\nHOVER a thumbnail to see the movie title.\nLEFT-CLICK a thumbnail to highlight a particular movie (some statistics are displayed for this movie only and not compared).\nRIGHT-CLICK a thumbnail to remove a particular movie from comparison.")
-    var date = new Date();
-    var minutes = 60;
-    date.setTime(date.getTime() + (minutes * 60 * 1000));
-    $.cookie('tutorial2', 'true', { expires: date });
-    }
 
     $('.thumbnail').mouseover(function(event) {
         switch (event.which) {
@@ -163,49 +119,10 @@ $.cookie.json = true;
                 document.getElementById(this.id).style.border = "5px inset black";
                 highlightedThumb = this.id;
                 var number = highlightedThumb.charAt(9);
-                $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[number-1].backdrop_path +')');
-                json_Chart1 = [{'Budget':movie[number-1].budget, 'Total Revenue':movie[number-1].revenue}];
-                json_Chart2 = [{'This Movie':movie[number-1].movieTweets, 'All Movies':movie[number-1].totalTweets}];
-                json_Chart3 = [{'Sentiment Score':movie[number-1].sentiment_rating}];
+                $("body").css('background-image', 'url(' + 'https://image.tmdb.org/t/p/w780' + movie[number-1].backdrop_path +')')
                 $.cookie('highlightedMovie', $.cookie('movie'+number));
                 $.cookie('highlightedN', number);
-                chart1.load({    
-                    json: json_Chart1,
-                    keys: {
-                        value: ['Budget', 'Total Revenue']
-                    },
-                    colors: {
-                    'Budget': '#ffa500',
-                    'Total Revenue': '#0099cc',
-                    }
-                    });
-
-                chart2.load({    
-                    json: json_Chart2,
-                    keys: {
-                        value: ['This Movie', 'All Movies']
-                    },
-                    colors: {
-                    'This Movie': '#326ada',
-                    'All Movies': '#a19c9c',
-                    }
-                    });
-
-                chart3.load({    
-                    json: json_Chart3,
-                    keys: {
-                        value: ['Sentiment Score']
-                    },
-                    });
-
-                clearWords();
-
-                d3.layout.cloud().size([275, 360])
-                    .words(frequency_list[number-1])
-                    .rotate(0)
-                    .fontSize(function(d) { return d.size; })
-                    .on("end", draw)
-                    .start();
+                updateStatPage();
                 
                 break;                
 
@@ -235,7 +152,8 @@ $.cookie.json = true;
                     document.getElementById("thumbnail2").style.visibility = "hidden";
                     chart4.unload({});
                     chart5.unload({});
-                    location.reload();
+                    chart6.unload({});
+                    chart7.unload({});
                     updateStatPage();
                     break;
 
@@ -249,7 +167,8 @@ $.cookie.json = true;
                     document.getElementById("thumbnail3").style.visibility = "hidden";
                     chart4.unload({});
                     chart5.unload({});
-                    location.reload();
+                    chart6.unload({});
+                    chart7.unload({});
                     updateStatPage();
                     break;
 
@@ -265,7 +184,8 @@ $.cookie.json = true;
                     document.getElementById("thumbnail4").style.visibility = "hidden";
                     chart4.unload({});
                     chart5.unload({});
-                    location.reload();
+                    chart6.unload({});
+                    chart7.unload({});
                     updateStatPage();
                     break;
 
@@ -283,13 +203,16 @@ $.cookie.json = true;
                     document.getElementById("thumbnail5").style.visibility = "hidden";                    
                     chart4.unload({});
                     chart5.unload({});
-                    location.reload();
+                    chart6.unload({});
+                    chart7.unload({});
                     updateStatPage();
                     break;
                 }
                 break;
         }
     })
+
+setTimeout(function () {
 
     chart4.load({
         rows: [
@@ -325,8 +248,12 @@ $.cookie.json = true;
         ]
     });
 
-    $("#thumbnail2").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[1].poster_path, "title":movie[1].title});
-    document.getElementById("thumbnail2").style.visibility = "visible";
+}, 1);
+
+$("#thumbnail2").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[1].poster_path, "title":movie[1].title});
+document.getElementById("thumbnail2").style.visibility = "visible";
+
+setTimeout(function () {
 
     chart4.load({
         rows: [
@@ -364,8 +291,12 @@ $.cookie.json = true;
         ]
     });
 
+}, 500);
+
     $("#thumbnail3").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[2].poster_path, "title":movie[2].title});
     document.getElementById("thumbnail3").style.visibility = "visible";
+
+setTimeout(function () {
 
     chart4.load({
         rows: [
@@ -405,8 +336,12 @@ $.cookie.json = true;
         ]
     });
 
+}, 1000);
+
     $("#thumbnail4").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[3].poster_path, "title":movie[3].title});
     document.getElementById("thumbnail4").style.visibility = "visible";
+
+setTimeout(function () {
 
     chart4.load({
         rows: [
@@ -448,8 +383,12 @@ $.cookie.json = true;
         ]
     });
 
+}, 1500);
+
     $("#thumbnail5").attr({"src": "https://image.tmdb.org/t/p/w500" + movie[4].poster_path, "title":movie[4].title});
     document.getElementById("thumbnail5").style.visibility = "visible";
+
+setTimeout(function () {
 
     chart4.load({
         rows: [
@@ -492,6 +431,8 @@ $.cookie.json = true;
             [movie[4].title, movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[0]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[1]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[2]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[3]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[4]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[5]], movie[4].tweets_per_day[Object.keys(movie[4].tweets_per_day)[6]]],
         ]
     });
+
+}, 2000);
 
 }
 
