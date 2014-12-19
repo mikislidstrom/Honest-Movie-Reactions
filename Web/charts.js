@@ -1,3 +1,4 @@
+//Chart settings and default values which are necessary to solve some color rendering bugs
 var chart1 = c3.generate({
     bindto: '#chart1',
     size: {
