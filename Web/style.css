@@ -13,7 +13,7 @@ body {
 	border-radius:10px;
 	opacity: 0.8;
 	background-color: #ffffff;
-	width: 30%;
+	width: 35%;
 	height: auto;
 	float: center;
 	padding:1% 1%;
@@ -21,8 +21,7 @@ body {
 
 .helpBtn {
 	margin: 1%;
-	margin-left: auto;
-	margin-right: auto;
+	width: 100%;
 	background-color: #c0deed;
 	border-radius: 10px;
 	color:#334466;

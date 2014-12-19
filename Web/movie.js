@@ -1,14 +1,10 @@
 var movieJSON;
 var titles;
-var id = "101";
 var keys;
 var statistics;
 var movie;
 var highlightedThumb;
 var frequency_list;
-var color = d3.scale.linear()
-            .domain([0,1,2,3,4,5,6,10,15,20,100])
-            .range(["#ddd", "#ccc", "#bbb", "#aaa", "#999", "#888", "#777", "#666", "#555", "#444", "#333", "#222"]);
 
 function updatePage() {
 
@@ -87,10 +83,11 @@ $.cookie.json = true;
 
     clearWords();
 
-    d3.layout.cloud().size([275, 360])
+    d3.layout.cloud().size([400, 400])
             .words(frequency_list[parseInt($.cookie('highlightedN')-1)])
             .rotate(0)
-            .fontSize(function(d) { return d.size; })
+            .padding(1)
+            .fontSize(function(d) { return (Math.sqrt(d.size)*3); })
             .on("end", draw)
             .start();
 
@@ -659,22 +656,25 @@ function add() {
     }  
 
 };
-
+var fill = d3.scale.category20b();
 function draw(words) {
     d3.select("#wordcloud").append("svg")
             .attr("id","wordcloud")
-            .attr("width", 275)
-            .attr("height", 340)
+            .attr("width", 400)
+            .attr("height", 400)
             .attr("class", "wordcloud")
             .append("g")
             // without the transform, words words would get cutoff to the left and top, they would
             // appear outside of the SVG area
-            .attr("transform", "translate(80,100)")
+            .attr("transform", "translate(200,200)")
             .selectAll("text")
             .data(words)
             .enter().append("text")
-            .style("font-size", function(d) { return d.size*4 + "px"; })
-            .style("fill", function(d, i) { return color(i); })
+            .attr("text-anchor", "middle")
+            .style("font-family", "Impact")
+            .style("font-size", function(d) { return d.size + "px"; })
+            //.style("fill", function(d, i) { return color(i); })
+            .style("fill", function(d, i) { return fill(i); })
             .attr("transform", function(d) {
                 return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
             })
