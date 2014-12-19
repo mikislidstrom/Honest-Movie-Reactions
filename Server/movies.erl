@@ -4,7 +4,6 @@
 
 -define(API_KEY, "90387aadff905aa5771e9aeb14ab9e3d").
 
-
 %% Gets a list of movies released on inputed date
 releases_day(Date) ->
 	Api_Key = "&api_key=" ++ ?API_KEY ++ "&page=1",
@@ -16,11 +15,11 @@ releases_day(Date) ->
 	inets:start(),
 	ssl:start(),
 	
-	% Pattern {ok, {{Version, 200, ReasonPhrase}, Headers, Body}}
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
 	{[_Page, {_Result,MovieList}, _TotalPages, _TotalResult]}=jiffy:decode(Body),
 	MovieList.
 
+%% Function to get the critics rating for a movie on rottentomatoes.com
 rotten_tomatoes(Imdb_Id) ->
 	Api_Key = "?apikey=nuyfaesekthcgc45fd7umc4j",
 	Url = "http://api.rottentomatoes.com/api/public/v1.0/movie_alias.json" ++ Api_Key ++ "&type=imdb&id=" ++ string:sub_string(Imdb_Id,3),
@@ -29,6 +28,7 @@ rotten_tomatoes(Imdb_Id) ->
 	{RatingsList} = proplists:get_value(<<"ratings">>, PropList),
 	proplists:get_value(<<"critics_score">>, RatingsList).
 
+%% Function to get the imdb rating for a movie on omdb.com
 imdb(Imdb_Id) ->
 	Url = "http://www.omdbapi.com/?plot=short&r=json&i=" ++ Imdb_Id,
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
@@ -51,12 +51,10 @@ releases_today() ->
 	inets:start(),
 	ssl:start(),
 	
-	% Pattern {ok, {{Version, 200, ReasonPhrase}, Headers, Body}}
 	{ok, {{_, 200, _}, _, Body}} = httpc:request(get, {Url, []}, [], []),
 	{[_Page, {_Result,MovieList}, _TotalPages, _TotalResult]}=jiffy:decode(Body),
 	MovieList.
 
-	%id_list(MovieList).
 
 %% Gets the JSON data for a movie at a certain day
 id(Id) ->

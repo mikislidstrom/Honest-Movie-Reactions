@@ -28,13 +28,15 @@ red_count_words(Input, _) ->
 		dict:new(),
 		Input
 	)].
-	
+
+%% Map function to get the average sentiment value per day
 map_sentiment_day(O,_,_) -> 
 	{PropList}=jiffy:decode(riak_object:get_value(O)),
 	Date = date_conversion(binary_to_list(proplists:get_value(<<"created_at">>, PropList))),
 	Rating = proplists:get_value(<<"rating">>, PropList),
 	[dict:from_list([{Date, [Rating]}])].
 
+%% Reduce function to get the average sentiment value per day
 red_sentiment_day(Input, _) ->
 	[lists:foldl(
 		fun(Date, Acc) ->
@@ -50,10 +52,12 @@ red_sentiment_day(Input, _) ->
 		Input
 	)].
 
+%% Map function to get all movie titles
 map_titles(O,_,_) ->
 	{PropList} = jiffy:decode(riak_object:get_value(O)),
 	[{proplists:get_value(<<"title">>, PropList), riak_object:key(O)}].
 
+%% Map function to get the average sentiment value for all tweets
 map_sentiment_average(O,_,_) ->
 	{PropList} = jiffy:decode(riak_object:get_value(O)),
 	[proplists:get_value(<<"rating">>, PropList)].

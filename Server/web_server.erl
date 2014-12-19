@@ -4,7 +4,7 @@
 %%% Basic web server for serving JSON data from the database to a web page
 %%% URL localhost:8081/erl/web_server:function
 
-
+%% Start the server
 start() ->
 	inets:start(),
 	inets:start(httpd, [
@@ -36,6 +36,7 @@ start() ->
 		]}
 	]).
 
+%% Stops the server
 stop(Pid) ->
 	inets:stop(httpd, Pid).
 
@@ -67,6 +68,8 @@ tweets(SessionID, Env, _Input) ->
 		twitter:get_tweets(MovieId)
 		]).
 
+%% Serves the wordcloud for a movie depending on which movie id is entered as query
+%% Accessed with URL "http://localhost:8081/erl/web_server:wordcloud?ID" where ID is the movie id
 wordcloud(SessionID, Env, _Input) ->
 	Query = proplists:get_value(query_string, Env),
 	{[_, _, _, {_,{WordCloud}}, _, _]} = jiffy:decode(db_handler:get("Stats", Query)),
@@ -76,12 +79,15 @@ wordcloud(SessionID, Env, _Input) ->
 		jiffy:encode(NewWordCloud)
 		]).
 
+%% Serves all the movie titles in database
+%% Accessed with URL "http://localhost:8081/erl/web_server:movie_titles" 
 movie_titles(SessionID, _Env, _Input) ->
 	mod_esi:deliver(SessionID, [
 		"Access-Control-Allow-Origin:*\r\nContent-Type: application/json\r\n\r\n",
 		jiffy:encode({db_handler:titles()})
 		]).
 
+%% Helper function to create the JSON output data for movie id
 create_movie_json(MovieId) ->
 	{MovieJSON} = jiffy:decode(db_handler:get("Movies", MovieId)),
 	NewMovieJSON = lists:keyreplace(<<"vote_average">>, 1, MovieJSON, {<<"vote_average">>, proplists:get_value(<<"vote_average">>, MovieJSON)*10}),
@@ -98,18 +104,18 @@ create_movie_json(MovieId) ->
 
 %% Helper functions to create the weekly stats for JSON
 
-% Creates a list of the last N dates
+%% Creates a list of the last N dates
 days(N) when N > 0 -> 
 	[list_to_binary(convert_date(calendar:gregorian_days_to_date(calendar:date_to_gregorian_days(erlang:date()) - N)))| days(N-1)];
 days(_) -> [].
 
-% Sets value to 0 if value is missing in proplist for input day
+%% Sets value to 0 if value is missing in proplist for input day
 value(Day, PropList) ->
 	case proplists:get_value(Day, PropList) of
 		undefined -> {Day, 0};
 		Value -> {Day, Value}
 	end. 
 
-% Converts the date to strinf format
+%% Converts the date to strinf format
 convert_date({Y,M,D}) when D < 10 -> integer_to_list(Y) ++ "-" ++ integer_to_list(M) ++ "-0" ++ integer_to_list(D);
 convert_date({Y,M,D}) -> integer_to_list(Y) ++ "-" ++ integer_to_list(M) ++ "-" ++ integer_to_list(D).

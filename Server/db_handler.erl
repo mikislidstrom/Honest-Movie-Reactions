@@ -10,7 +10,7 @@
 %%% Module works as a wrapper for the riak-erlang-client 
 %%% accessing and writing data to the database
 
-% Put an object with a key in a bucket
+%% Put an object with a key in a bucket
 put(Bucket, Key, Object) when is_binary(Object) -> 
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT), %% IP needs to be changed
 	RiakObject = riakc_obj:new(list_to_binary(Bucket), list_to_binary(Key), Object, <<"application/json">>),
@@ -23,8 +23,8 @@ put(Bucket, Key, Object) ->
 	riakc_pb_socket:put(Pid, RiakObject),
 	riakc_pb_socket:stop(Pid).
 
-% Get an object with a key in a bucket
-% returns the object as Erlang type
+%% Get an object with a key in a bucket
+%% returns the object as Erlang type
 get(Bucket, Key) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	case riakc_pb_socket:get(Pid, list_to_binary(Bucket), list_to_binary(Key)) of
@@ -36,29 +36,33 @@ get(Bucket, Key) ->
 			{error, Msg}
 	end.
 
+%% Gets all the buckets in Riak
 buckets() ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, List} = riakc_pb_socket:list_buckets(Pid),
 	riakc_pb_socket:stop(Pid),
 	List.
-
+%% Gets all keys in a bucket and returns it as a JSON string
 keys_json(Bucket) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, List} = riakc_pb_socket:list_keys(Pid, list_to_binary(Bucket)),
 	riakc_pb_socket:stop(Pid),
 	jiffy:encode(List).
 
+%% Gets all keys in a bucket
 keys(Bucket) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?PORT),
 	{ok, List} = riakc_pb_socket:list_keys(Pid, list_to_binary(Bucket)),
 	riakc_pb_socket:stop(Pid),
 	[binary_to_list(X)|| X <- List].
 
+%% Deletes a key in a bucket
 delete(Bucket, Key) ->
 	{ok, Pid} = riakc_pb_socket:start_link(?HOST, ?	PORT),
 	riakc_pb_socket:delete(Pid, list_to_binary(Bucket), list_to_binary(Key)),
 	riakc_pb_socket:stop(Pid).
 
+%% Returns the amount of keys for a bucket
 cal_keys(Bucket) ->
 	M = 0,
 	lists:sum([M + 1 || _X <- keys(Bucket)]).
@@ -149,21 +153,3 @@ tweets_day(Bucket) ->
 	),
 	riakc_pb_socket:stop(Pid),
 	dict:to_list(Result).
-
-%% Update the stats
-% load_stats() ->
-% 	%db_handler:put(<<"Stats">>, list_to_binary(Key), 
-% 	%{_,_,Start} = os:timestamp(),
-% 	[db_handler:put("Stats", Key, jiffy:encode(load_movie_stats(Key)))||Key <- db_handler:keys("Movies")].
-% 	%{_,_,Stop} = os:timestamp(),
-% 	%Time = Start - Stop,
-
-% %% Loads the movie stats per Key (movie)
-% load_movie_stats(Key) ->
-% 	SumTweets = {<<"totalTweets">>, sum_tweets()},
-% 	SumTweetsMovie = {<<"movieTweets">>, length(db_handler:keys(Key))},
-% 	SentimentRating = {<<"sentiment_rating">>, db_handler:sentiment_average(Key)},
-% 	WordCloud = {<<"wordcloud">>, {db_handler:wordcount(Key)}},
-% 	TweetsDay = {<<"tweets_per_day">>, {db_handler:tweets_day(Key)}},
-% 	SentimentDay = {<<"sentiment_per_day">>, {db_handler:sentiment_day(Key)}},
-% 	{[SumTweets, SumTweetsMovie, SentimentRating, WordCloud, TweetsDay, SentimentDay]}.
