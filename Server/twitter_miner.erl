@@ -10,10 +10,10 @@ twitter_search(Movie) ->
 	URL = "https://api.twitter.com/1.1/search/tweets.json",
   Params = [{q, remove_excess(Movie) ++ "%20-RT"}, {lang, en}],
 
-  Api_key = "QtSP14USgvF4Zj9IKHy2I5bKN",
-  Api_secret = "c7j35Y4vU7mw2K5vdm4oAwS6VLViLutd4ZcORCC8ByAJCBm1qV",
-  Access_token = "2827251826-bGt8aDBRHkySUiHW5XJBkOJ8u3vZFNS0gUhgHd5",
-  Access_token_secret = "Ktwz5o3bYYsLSBA8fpTOk78UFkCGNtGU9NVV7b0fwoP2M",
+  Api_key = "",
+  Api_secret = "",
+  Access_token = "",
+  Access_token_secret = "",
 
   Consumer = {Api_key, Api_secret, hmac_sha1},
   Token = Access_token,
