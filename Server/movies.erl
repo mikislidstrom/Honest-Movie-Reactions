@@ -2,7 +2,7 @@
 -export([releases_day/1, releases_today/0, id/1, url/1, string_date/0, id_list/1, popular/1]).
 -export([rotten_tomatoes/1, imdb/1]).
 
--define(API_KEY, "90387aadff905aa5771e9aeb14ab9e3d").
+-define(API_KEY, "").
 
 %% Gets a list of movies released on inputed date
 releases_day(Date) ->
