@@ -1,4 +1,4 @@
 MoSCoW
 ======
 
-School project!
+Erlang School project!
